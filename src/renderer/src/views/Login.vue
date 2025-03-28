@@ -1,7 +1,10 @@
 <template>
   <div class="login-panel">
     <div class="title drag">原梦通讯</div>
-    <div class="login-form">
+    <div v-if="showLoading" class="loading-panel">
+      <img src="@/assets/img/loading.gif" alt="图片加载" />
+    </div>
+    <div v-else class="login-form">
       <div class="error-msg">{{ errorMsg }}</div>
       <el-form :model="formData" ref="formDataRef" label-width="" @submit.prevent>
         <!--邮箱-->
@@ -98,20 +101,29 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
+import Api from '@/utils/Api'
+import Request from '@/utils/Request'
+import Utils from '@/utils/Utils'
+import Verify from '@/utils/Verify'
+import Message from '@/plugin/Message'
+import { ref, reactive, nextTick } from 'vue'
+import md5 from 'js-md5'
+import { useUserInfoStore } from '@/stores/UserInfoStore'
 
-const { proxy } = getCurrentInstance()
+const userInfoStore = useUserInfoStore()
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const formData = ref({})
 const formDataRef = ref()
-const rules = {
-  //默认校验
-  email: [{ required: true, message: '请输入邮箱' }]
-}
 
 const errorMsg = ref(null)
-
 const isLogin = ref(true)
+
+//加载页面
+const showLoading = ref(false)
+
 //切换登录或注册界面
 const changeOpType = () => {
   window.ipcRenderer.send('loginOrRegister', !isLogin.value)
@@ -128,8 +140,8 @@ const changeOpType = () => {
  */
 const checkCodeUrl = ref(null)
 const changeCheckCode = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.checkCode
+  let result = await Request({
+    url: Api.checkCode
   })
   if (!result) {
     return
@@ -137,10 +149,32 @@ const changeCheckCode = async () => {
   checkCodeUrl.value = result.data.check_code
   localStorage.setItem('check_code_key', result.data.check_code_key)
 }
-
 changeCheckCode()
+
+/**
+ * 校验参数
+ */
+const checkValue = (type, value, msg) => {
+  if (Utils.isEmpty(value)) {
+    errorMsg.value = msg
+    return false
+  }
+
+  if (type && !Verify[type](value)) {
+    errorMsg.value = msg
+    return false
+  }
+  return true
+}
+/**
+ * 清空值
+ */
+const cleanVerify = () => {
+  errorMsg.value = null
+}
+
 //提交
-const submit = () => {
+const submit = async () => {
   cleanVerify()
 
   if (!checkValue('checkEmail', formData.value.email, '请输入正确的邮箱')) {
@@ -165,24 +199,61 @@ const submit = () => {
   if (!checkValue(null, formData.value.checkCode, '请输入验证码')) {
     return
   }
-}
 
-//校验参数
-const checkValue = (type, value, msg) => {
-  if (proxy.Utils.isEmpty(value)) {
-    errorMsg.value = msg
-    return false
+  if (isLogin.value) {
+    showLoading.value = true
   }
 
-  if (type && !proxy.Verify[type](value)) {
-    errorMsg.value = msg
-    return false
+  /**
+   * 请求统一发送
+   */
+  let result = await Request({
+    url: isLogin.value ? Api.login : Api.register,
+    showLoading: !isLogin.value,
+    showError: false,
+    params: {
+      email: formData.value.email,
+      password: isLogin.value ? md5(formData.value.password) : formData.value.password,
+      checkCode: formData.value.checkCode,
+      nickName: isLogin.value ? null : formData.value.nickName,
+      checkCodeKey: localStorage.getItem('check_code_key')
+      //TODO 增加邮箱验证码功能
+    },
+    errorCallback: (response) => {
+      showLoading.value = false
+      //刷新验证码
+      changeCheckCode()
+      errorMsg.value = response.info
+    }
+  })
+  if (!result) {
+    return
   }
-  return true
-}
-//清空值
-const cleanVerify = () => {
-  errorMsg.value = null
+  if (isLogin.value) {
+    //登录 状态管理用pinia
+    console.log('我要登录拉')
+    userInfoStore.setInfo(result.data)
+    localStorage.setItem('token', result.data.token)
+    //跳转
+    router.push('/main')
+
+    //主进程交互 传入屏幕高宽
+    const screenWidth = window.screen.width
+    const screenHeight = window.screen.height
+    window.ipcRenderer.send('openChat', {
+      email: formData.value.email,
+      //用于发送心跳
+      token: result.data.token,
+      userId: result.data.userId,
+      nickName: result.data.nickName,
+      admin: result.data.admin,
+      screenWidth: screenWidth,
+      screenHeight: screenHeight
+    })
+  } else {
+    Message.success('注册成功')
+    changeOpType()
+  }
 }
 </script>
 

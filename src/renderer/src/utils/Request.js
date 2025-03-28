@@ -28,8 +28,8 @@ instance.interceptors.request.use(
         text: '加载中',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      return config
     }
+    return config
   },
 
   (error) => {
@@ -57,7 +57,6 @@ instance.interceptors.response.use(
     }
     //正常请求
     if (responseData.code === 200) {
-      console.log("新年好"+responseData);
       return responseData
     } else if (responseData.code === 901) {
       //登录超时
@@ -67,7 +66,6 @@ instance.interceptors.response.use(
     } else {
       //其它错误
       if (errorCallback) {
-        console.log("新年好2");
         errorCallback(responseData)
       }
       return Promise.reject({ showError: showError, msg: responseData.info })

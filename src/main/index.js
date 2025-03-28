@@ -2,21 +2,22 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+
+import { onLoginOrRegister, onLoginSuccess } from './ipc'
 //打开控制台
 // const NODE_ENV = process.env.NODE_ENV
 // if (NODE_ENV === 'development') {
 //   mainWindow.webContents.openDevTools();
 // }
 
-const login_width = 300;
-const login_height = 370;
-const register_height = 490;
-
+const login_width = 300
+const login_height = 370
+const register_height = 490
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    title:'原梦通讯',
+    title: '原梦通讯',
     width: login_width,
     height: login_height,
     show: false,
@@ -29,38 +30,54 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
-      contextIsolation: false,
+      contextIsolation: false
     }
   })
 
-  ipcMain.on("loginOrRegister", (e, isLogin) => {
-    console.log("收到渲染消息" + isLogin);
-    mainWindow.setResizable(true);
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+    mainWindow.setTitle('原梦通讯')
+  })
+
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url)
+    return { action: 'deny' }
+  })
+
+  // HMR for renderer base on electron-vite cli.
+  // Load the remote URL for development or the local html file for production.
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  }
+
+  //监听 登录注册
+  onLoginOrRegister((isLogin) => {
+    console.log('callBack方法' + isLogin)
+    mainWindow.setResizable(true)
     if (isLogin) {
-      mainWindow.setSize(login_width, login_height);
+      mainWindow.setSize(login_width, login_height)
     } else {
-      mainWindow.setSize(login_width, register_height);
+      mainWindow.setSize(login_width, register_height)
     }
-    mainWindow.setResizable(false);
+    mainWindow.setResizable(false)
   })
 
-mainWindow.on('ready-to-show', () => {
-  mainWindow.show()
-  mainWindow.setTitle("原梦通讯")
-})
-
-mainWindow.webContents.setWindowOpenHandler((details) => {
-  shell.openExternal(details.url)
-  return { action: 'deny' }
-})
-
-// HMR for renderer base on electron-vite cli.
-// Load the remote URL for development or the local html file for production.
-if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-  mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-} else {
-  mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
-}
+  //登录成功
+  onLoginSuccess((config) => {
+    mainWindow.setResizable(true)
+    mainWindow.setSize(850, 800)
+    //居中显示
+    mainWindow.center()
+    //最大化
+    mainWindow.setMaximizable(true)
+    //最小的窗口大小
+    mainWindow.setMinimumSize(800, 600)
+    if (config.admin) {
+      //TODO 管理员新界面,托盘操作
+    }
+  })
 }
 
 // This method will be called when Electron has finished
