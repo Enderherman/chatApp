@@ -1,7 +1,5 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import { ipcMain } from 'electron'
+
 import store from './store'
 
 const onLoginOrRegister = (callback) => {
@@ -20,4 +18,13 @@ const onLoginSuccess = (callback) => {
   })
 }
 
-export { onLoginOrRegister, onLoginSuccess }
+/**
+ * 调整窗口大小
+ */
+const winTitleOp = (callback) => {
+  ipcMain.on('winTitleOp', (e, data) => {
+    callback(e, data)
+  })
+}
+
+export { onLoginOrRegister, onLoginSuccess, winTitleOp }

@@ -98,6 +98,7 @@
       </el-form>
     </div>
   </div>
+  <WinOp :showSetTop="false" :showMin="false" :showMax="false" :closeType="0"></WinOp>
 </template>
 
 <script setup>
@@ -112,6 +113,7 @@ import { useUserInfoStore } from '@/stores/UserInfoStore'
 
 const userInfoStore = useUserInfoStore()
 import { useRouter } from 'vue-router'
+import WinOp from '@/components/WinOp.vue'
 
 const router = useRouter()
 

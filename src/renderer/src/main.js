@@ -12,6 +12,9 @@ import Verify from '@/utils/Verify'
 import Request from '@/utils/Request'
 import Message from '@/plugin/Message'
 import Api from '@/utils/Api'
+import WinOp from '@/components/WinOp.vue'
+import Layout from '@/components/Layout.vue'
+import ContentPanel from '@/components/ContentPanel.vue'
 
 console.log('当前环境变量：', import.meta.env)
 console.log('BASE_URL:', import.meta.env.BASE_URL)
@@ -20,6 +23,10 @@ const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
 app.use(Pinia.createPinia())
+
+app.component('Layout', Layout)
+app.component('WinOp', WinOp)
+app.component('ContentPanel', ContentPanel)
 app.config.globalProperties.Utils = Utils
 app.config.globalProperties.Verify = Verify
 app.config.globalProperties.Request = Request

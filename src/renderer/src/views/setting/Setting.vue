@@ -1,11 +1,7 @@
 <template>
-  <div>设置页面</div>
+  <Layout></Layout>
 </template>
-<script setup>
-
-</script>
-
-
+<script setup></script>
 
 <style scoped lang="less">
 
