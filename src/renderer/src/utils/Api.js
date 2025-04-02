@@ -23,10 +23,10 @@ const api = {
   addContact2BlackList: '/contact/addContact2BlackList', //拉黑联系人
   delContact: '/contact/delContact', //删除联系人
   getContactInfo: '/contact/getContactInfo', //获取联系人信息
-  saveUserInfo: '/userInfo/saveUserInfo', //保存用户信息
-  getUserInfo: '/userInfo/getUserInfo', //获取用户信息
-  updatePassword: '/userInfo/updatePassword',
-  logout: '/userInfo/ logout',
+  saveUserInfo: '/account/saveUserInfo', //保存用户信息
+  getUserInfo: '/account/getUserInfo', //获取用户信息
+  updatePassword: '/account/updatePassword',
+  logout: '/account/ logout',
   sendMessage: '/chat/sendMessage', //发送消息
   uploadFile: '/chat/uploadFile', //上传文件地址
   loadAdminAccount: '/admin/loadUser', //后台获取用户列表

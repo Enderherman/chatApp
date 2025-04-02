@@ -13,22 +13,55 @@
     <div v-if="searchResult && Object.keys(searchResult).length > 0" class="search-result-panel">
       <div class="search-result">
         <span class="contact-type">{{ contactTypeName }}</span>
-        <!--TODO P15 23:03-->
+        <UserBaseInfo
+          :user-info="searchResult"
+          :show-area="searchResult.contactType === 'USER'"
+        ></UserBaseInfo>
+      </div>
+      <div v-if="searchResult.contactId !== userInfoStore.getInfo().userId" class="op-btn">
+        <el-button
+          type="primary"
+          v-if="
+            searchResult.status == null ||
+            searchResult.status === 0 ||
+            searchResult.status === 2 ||
+            searchResult.status === 3 ||
+            searchResult.status === 4
+          "
+          @click="applyContact"
+        >
+          {{ searchResult.contactType === 'USER' ? '添加联系人' : '申请加入群组' }}
+        </el-button>
+        <el-button v-if="searchResult.status === 1" type="primary" @click="sendMessage"></el-button>
+        <span v-if="searchResult.status === 5 || searchResult.status === 6">对方拉黑了你 </span>
       </div>
     </div>
     <div v-if="!searchResult" class="no-data">没有结果都</div>
   </ContentPanel>
+  <SearchAdd ref="searchAddRef" @reload="resetFrom"></SearchAdd>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import Api from '@/utils/Api'
 import Request from '@/utils/Request'
 
 import Message from '@/plugin/Message'
+import { useUserInfoStore } from '@/stores/UserInfoStore'
+import UserBaseInfo from '@/components/UserBaseInfo.vue'
+import SearchAdd from '@/views/contact/SearchAdd.vue'
+
+const userInfoStore = useUserInfoStore()
 
 const contactId = ref()
+const contactTypeName = computed(() => {
+  if (userInfoStore.getInfo().userId === searchResult.value.contactId) {
+    return '自己'
+  } else if (searchResult.value.contactType === 'USER') {
+    return '用户'
+  } else return '群组'
+})
 
 //搜索
 const searchResult = ref([])
@@ -47,6 +80,14 @@ const search = async () => {
   }
   searchResult.value = result.data
 }
+
+const searchAddRef = ref()
+const applyContact = () => {
+  console.log('applyContact')
+  searchAddRef.value.show(searchResult.value)
+}
+
+const resetFrom = () => {}
 </script>
 
 <style scoped lang="less">
