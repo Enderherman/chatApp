@@ -32,7 +32,9 @@
         >
           {{ searchResult.contactType === 'USER' ? '添加联系人' : '申请加入群组' }}
         </el-button>
-        <el-button v-if="searchResult.status === 1" type="primary" @click="sendMessage"></el-button>
+        <el-button v-if="searchResult.status === 1" type="primary" @click="sendMessage"
+          >发送消息</el-button
+        >
         <span v-if="searchResult.status === 5 || searchResult.status === 6">对方拉黑了你 </span>
       </div>
     </div>
@@ -83,11 +85,16 @@ const search = async () => {
 
 const searchAddRef = ref()
 const applyContact = () => {
-  console.log('applyContact')
   searchAddRef.value.show(searchResult.value)
 }
 
-const resetFrom = () => {}
+/**
+ * 重置表单
+ */
+const resetFrom = () => {
+  searchAddRef.value = {}
+  contactId.value = undefined
+}
 </script>
 
 <style scoped lang="less">

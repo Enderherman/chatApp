@@ -71,7 +71,7 @@ const close = () => {
 <style lang="scss">
 .cust-dialog {
   .el-dialog__body {
-    padding: 0px;
+    padding: 0;
   }
 
   .dialog-body {

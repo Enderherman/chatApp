@@ -38,16 +38,52 @@ const router = createRouter({
               component: () => import('@/views/contact/BlankPage.vue')
             },
             {
+              path: '/contact/createGroup',
+              name: '新建群聊',
+              component: () => import('@/views/contact/GroupEdit.vue')
+            },
+            {
               path: '/contact/search',
-              name: '搜索',
+              name: '搜索好友',
               component: () => import('@/views/contact/Search.vue')
+            },
+            {
+              path: '/contact/contactNotice',
+              name: '新的朋友',
+              component: () => import('@/views/contact/ContactApply.vue')
+            },
+            {
+              path: '/contact/userDetail',
+              name: '用户详情',
+              component: () => import('@/views/contact/UserDetail.vue')
+            },
+            {
+              path: '/contact/groupDetail',
+              name: '群组详情',
+              component: () => import('@/views/contact/GroupDetail.vue')
             }
           ]
         },
         {
           path: '/setting',
           name: '设置',
-          component: () => import('@/views/setting/Setting.vue')
+          component: () => import('@/views/setting/Setting.vue'),
+          children: [
+            {
+              path: '/setting/userInfo',
+              name: '用户详情',
+              component: () => import('@/views/setting/UserInfo.vue')
+            },
+            {
+              path: '/setting/about',
+              name: '关于',
+              component: () => import('@/views/setting/About.vue')
+            },{
+              path: '/setting/fileManage',
+              name: '文件管理',
+              component: () => import('@/views/setting/FileManage.vue')
+            }
+          ]
         }
       ]
     }

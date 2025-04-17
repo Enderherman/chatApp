@@ -98,7 +98,7 @@
       </el-form>
     </div>
   </div>
-  <WinOp :showSetTop="false" :showMin="false" :showMax="false" :closeType="0"></WinOp>
+  <WinOp :show-set-top="false" :show-min="false" :show-max="false" :close-type="0"></WinOp>
 </template>
 
 <script setup>
@@ -107,7 +107,7 @@ import Request from '@/utils/Request'
 import Utils from '@/utils/Utils'
 import Verify from '@/utils/Verify'
 import Message from '@/plugin/Message'
-import { ref, reactive, nextTick } from 'vue'
+import { ref, nextTick, onMounted } from 'vue'
 import md5 from 'js-md5'
 import { useUserInfoStore } from '@/stores/UserInfoStore'
 
@@ -233,7 +233,6 @@ const submit = async () => {
   }
   if (isLogin.value) {
     //登录 状态管理用pinia
-    console.log('我要登录拉')
     userInfoStore.setInfo(result.data)
     localStorage.setItem('token', result.data.token)
     //跳转
@@ -252,11 +251,26 @@ const submit = async () => {
       screenWidth: screenWidth,
       screenHeight: screenHeight
     })
+    window.ipcRenderer.send('setLocalStore', { key: 'devWsDomain', val: Api.devWsDomain })
+
+    window.ipcRenderer.send('getLocalStore', 'devWsDomain')
   } else {
     Message.success('注册成功')
     changeOpType()
   }
 }
+
+//初始化ws链接
+const init = () => {
+  window.ipcRenderer.send('setLocalStore', { key: 'prodDomain', val: Api.prodDomain })
+  window.ipcRenderer.send('setLocalStore', { key: 'devDomain', val: Api.devDomain })
+  window.ipcRenderer.send('setLocalStore', { key: 'prodWsDomain', val: Api.prodWsDomain })
+  window.ipcRenderer.send('setLocalStore', { key: 'devWsDomain', val: Api.devWsDomain })
+}
+
+onMounted(() => {
+  init()
+})
 </script>
 
 <style lang="scss" scoped>

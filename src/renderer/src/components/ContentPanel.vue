@@ -23,7 +23,8 @@ const props = defineProps({
   .content-inner {
     /* 去掉原先的固定宽度 */ /* width: 400px; */ /* 让内部容器自动水平居中 */
     margin: 0 auto; /* 如果想让两侧都留 125px，可以在内部容器上限制最大宽度。 这样无论屏幕多宽，content-inner 只会占据除去 125*2 后的中间部分， 并自动居中 */
-    max-width: calc(100% - 250px); /* “顶格”即不加额外的上边距 */
+    //max-width: calc(100% - 200px); /* “顶格”即不加额外的上边距 */
+    width: 400px;
   }
 }
 </style>

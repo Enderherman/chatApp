@@ -4,7 +4,13 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 
-import { onLoginOrRegister, onLoginSuccess, winTitleOp } from './ipc'
+import {
+  onLoginOrRegister,
+  onLoginSuccess,
+  winTitleOp,
+  onSetLocalStore,
+  onGetLocalStore
+} from './ipc'
 
 //打开控制台
 // const NODE_ENV = process.env.NODE_ENV
@@ -140,6 +146,9 @@ function createWindow() {
       }
     }
   })
+
+  onSetLocalStore()
+  onGetLocalStore()
 }
 
 // This method will be called when Electron has finished

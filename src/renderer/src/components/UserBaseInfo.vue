@@ -8,19 +8,23 @@
       :show-detail="true"
     ></AvatarBase>
     <div class="user-info">
-      {{ userInfo.nickName }}
-      <span v-if="userInfo.sex === 0" class="iconfont icon-woman"></span>
-      <span v-if="userInfo.sex === 1" class="iconfont icon-man"></span>
-      <div class="info">ID:{{ userInfo.userId || userInfo.contactId }}</div>
-      <div v-if="props.showArea" class="info"> 地区:{{ Utils.getAreaInfo(userInfo.areaName)}}</div>
+      <div class="nick-name">
+        {{ userInfo.nickName }}
+        <span v-if="userInfo.sex === 0" class="iconfont icon-woman"></span>
+        <span v-if="userInfo.sex === 1" class="iconfont icon-man"></span>
+        <div class="info">ID: {{ userInfo.userId || userInfo.contactId }}</div>
+        <div v-if="props.showArea" class="info">
+          地区: {{ Utils.getAreaInfo(userInfo.areaName) }}
+        </div>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
 import AvatarBase from '@/components/AvatarBase.vue'
 import Utils from '@/utils/Utils'
+
 const props = defineProps({
   userInfo: {
     type: Object,
@@ -50,7 +54,7 @@ const props = defineProps({
       font-size: 16px;
 
       .iconfont {
-        font-size: 13px;
+        font-size: 14px;
       }
 
       .icon-man {
@@ -63,7 +67,7 @@ const props = defineProps({
     }
 
     .info {
-      font-size: 12px;
+      font-size: 13px;
       color: #9e9e9e;
       margin-top: 3px;
     }

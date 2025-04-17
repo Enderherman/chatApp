@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -77,6 +77,27 @@ const changeMenu = (item) => {
   currentValue.value = item
   router.push(item.path)
 }
+
+import { useUserInfoStore } from '@/stores/UserInfoStore'
+
+const userInfoStore = useUserInfoStore()
+import Request from '@/utils/Request'
+import Api from '@/utils/Api'
+
+const getLoginInfo = async () => {
+  let result = await Request({
+    url: Api.getUserInfo,
+    params: {}
+  })
+  if (!result) {
+    return result
+  }
+  userInfoStore.setInfo(result.data)
+}
+
+onMounted(() => {
+  getLoginInfo()
+})
 </script>
 
 <style scoped lang="less">

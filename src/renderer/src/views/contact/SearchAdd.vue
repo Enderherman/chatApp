@@ -27,11 +27,13 @@
 
 <script setup>
 import { nextTick, ref } from 'vue'
-import { useUserInfoStore } from '@/stores/UserInfoStore'
 import Request from '@/utils/Request'
 import Api from '@/utils/Api'
 import Message from '@/plugin/Message'
+import { useUserInfoStore } from '@/stores/UserInfoStore'
+import { useContactStateStore } from '@/stores/ContactStateStore'
 
+const contactStateStore = useContactStateStore()
 const userInfoStore = useUserInfoStore()
 const dialogConfig = ref({
   show: false,
@@ -47,14 +49,15 @@ const dialogConfig = ref({
   ]
 })
 
-const formData = ref({
-  applyInfo: ''
-})
+const formData = ref({})
 const formDataRef = ref()
 const rules = {
   title: [{ required: true, message: '请输入内容' }]
 }
 
+/**
+ * 申请好友
+ */
 const emit = defineEmits(['reload'])
 const submitApply = async () => {
   const { contactId, contactType, applyInfo } = formData.value
@@ -77,6 +80,11 @@ const submitApply = async () => {
   }
   dialogConfig.value.show = false
   emit('reload')
+
+  if (result.data === 0) {
+    console.log(contactType)
+    contactStateStore.setContactReload(contactType)
+  }
 }
 
 const show = (data) => {

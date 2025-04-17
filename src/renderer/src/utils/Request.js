@@ -96,10 +96,10 @@ const request = (config) => {
   //创建form对象
   let formData = new FormData()
   for (let key in params) {
-    formData.append(key, params[key] == undefined ? '' : params[key])
+    formData.append(key, params[key] === undefined ? '' : params[key])
   }
 
-  if (dataType != null && dataType == 'json') {
+  if (dataType != null && dataType === 'json') {
     contentType = contentTypeJson
   }
   const token = localStorage.getItem('token')

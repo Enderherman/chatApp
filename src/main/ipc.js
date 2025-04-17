@@ -27,4 +27,20 @@ const winTitleOp = (callback) => {
   })
 }
 
-export { onLoginOrRegister, onLoginSuccess, winTitleOp }
+//测试
+const onSetLocalStore = () => {
+  ipcMain.on('setLocalStore', (e, { key, val }) => {
+    store.setData(key, val)
+
+    console.log(store.getData(key))
+  })
+}
+
+const onGetLocalStore = () => {
+  ipcMain.on('getLocalStore', (e, key) => {
+    console.log('获取渲染进程的获取事件key:', key)
+    e.sender.send('getLocalStoreCallback', '这里是主进程窝' + store.getData(key))
+  })
+}
+
+export { onLoginOrRegister, onLoginSuccess, winTitleOp, onSetLocalStore, onGetLocalStore }
