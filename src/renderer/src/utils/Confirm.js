@@ -5,7 +5,7 @@ const confirm = ({ message, okfun, showCancelBtn = true, okTest = '确定' }) =>
     'close-on-click-modal': false,
     confirmButtonText: okTest,
     cancelButtonText: '取消',
-    showCancelBtn: showCancelBtn,
+    showCancelButton: showCancelBtn,
     type: 'warning'
   })
     .then(async () => {

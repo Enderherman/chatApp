@@ -24,7 +24,7 @@
       </div>
       <div class="part-row">
         <div class="part-title">个性签名</div>
-        <div class="part-content">{{ userInfo.personalSignature || '...' }}</div>
+        <div class="part-content">{{ userInfo?.personalSignature || '...' }}</div>
       </div>
     </div>
     <div class="op-btn">
@@ -39,13 +39,13 @@
 import { watch, ref } from 'vue'
 import Request from '@/utils/Request'
 import Api from '@/utils/Api'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Confirm from '@/utils/Confirm'
 import { useContactStateStore } from '@/stores/ContactStateStore'
 
 const contactStoreState = useContactStateStore()
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 const userInfo = ref({})
 //获取联系人信息
 const loadUserDetail = async (contactId) => {
@@ -108,7 +108,15 @@ const delContactData = () => {
 }
 
 //发消息
-const sendMessage = () => {}
+const sendMessage = () => {
+  router.push({
+    path: '/chat',
+    query: {
+      chatId: userInfo.value.userId,
+      timestamp: new Date().getTime()
+    }
+  })
+}
 //修改备注
 const updateRemark = () => {}
 watch(

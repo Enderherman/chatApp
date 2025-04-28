@@ -47,26 +47,43 @@ import Message from '@/plugin/Message'
 import Request from '@/utils/Request'
 import Api from '@/utils/Api'
 import { useContactStateStore } from '@/stores/ContactStateStore'
+import { useAvatarInfoStore } from '@/stores/AvatarUploadStore'
 
 const contactStateStore = useContactStateStore()
+const avatarInfoStore = useAvatarInfoStore()
+
 const formData = ref({})
 const formDataRef = ref()
 const rules = {
   groupName: [{ required: true, message: '请输入群名称' }],
-  joinType: [{ required: true, message: '请选择加入权限' }]
-  // avatarFile: [{ required: true, message: '请选择头像' }]
+  joinType: [{ required: true, message: '请选择加入权限' }],
+  avatarFile: [{ required: true, message: '请选择头像' }]
 }
 
 const emit = defineEmits(['editBack'])
+
+//保存头像
+const saveCover = ({ avatarFile, coverFile }) => {
+  console.log('avatar:::::::::', avatarFile)
+  formData.value.avatarFile = avatarFile
+  console.log('cover:::::::::', coverFile)
+  formData.value.coverFile = coverFile
+}
+
 //提交
 const submit = async () => {
   formDataRef.value.validate(async (valid) => {
     if (!valid) {
       return
     }
-    //TODO 头像相关重新加载
+
     let params = {}
+
     Object.assign(params, formData.value)
+    //头像相关重新加载
+    if (params.groupId) {
+      avatarInfoStore.setForceReload(params.groupId, false)
+    }
     let result = await Request({
       url: Api.saveGroup,
       params
@@ -74,7 +91,10 @@ const submit = async () => {
     if (!result) {
       return
     }
-
+    // 重新加载头像
+    if (params.groupId) {
+      avatarInfoStore.setForceReload(params.groupId, true)
+    }
     if (params.groupId && params.groupId !== '') {
       Message.success('群组修改成功')
       emit('editBack')
@@ -83,12 +103,10 @@ const submit = async () => {
     }
     formDataRef.value.resetFields()
     contactStateStore.setContactReload('MY_GROUP')
-    //TODO 重新加载头像
+
   })
 }
 
-//保存头像
-const saveCover = () => {}
 
 //展示信息
 const show = (data) => {

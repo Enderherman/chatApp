@@ -1,8 +1,8 @@
 const api = {
   prodDomain: 'http://127.0.0.1:5050',
   devDomain: 'http://127.0.0.1:5050',
-  prodWsDomain: 'ws:/127.0.0.1:5051/ws',
-  devWsDomain: 'ws:/127.0.0.1:5051/ws',
+  prodWsDomain: 'ws://127.0.0.1:5051/ws',
+  devWsDomain: 'ws://127.0.0.1:5051/ws',
   checkCode: '/account/checkCode', //验证码
   login: '/account/login', //登录
   register: '/account/register', //注册
@@ -12,7 +12,7 @@ const api = {
   getGroupInfo: '/group/getGroupInfo', //获取群组信息
   getGroupInfo4Chat: '/group/getGroupInfo4Chat', //获取群聊群详细信息
   dissolutionGroup: '/group/dissolutionGroup', //解散群组
-  leaveGroup: '/group/ leaveGroup', //退出群组
+  leaveGroup: '/group/leaveGroup', //退出群组
   addOrRemoveGroupUser: '/group/addOrRemoveGroupUser', //添加或者删除群成员
   search: '/contact/search', //搜索好友
   applyAdd: '/contact/applyAdd', //申请加入

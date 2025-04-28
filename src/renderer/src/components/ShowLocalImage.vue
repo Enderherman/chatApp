@@ -1,20 +1,21 @@
 <template>
   <div class="image-panel" @click="showImageHander">
-    <el-image src="serverUrl" fit="scale-down" :width="width"></el-image>
+    <el-image :src="serverUrl" fit="scale-down" :width="width">
+      <template #error>
+        <div class="iconfont icon-image-error"></div>
+      </template>
+    </el-image>
+    <div v-if="showPlay" class="play-panel">
+      <span class="iconfont icon-video-play"></span>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { useGlobalInfoStore } from '@/stores/GlobalInfoStore'
 
-const serverUrl = computed(() => {
-  if(!props.fileId){
-    return ;
-  }
-  return ''
-  //TODO 获取本地服务的url
-})
-
+const globalInfoStore = useGlobalInfoStore()
 const props = defineProps({
   width: {
     type: Number,
@@ -39,6 +40,14 @@ const props = defineProps({
     type: Boolean,
     default: false
   }
+})
+const serverUrl = computed(() => {
+  if (!props.fileId) {
+    return
+  }
+
+  const serverPort = globalInfoStore.getInfo('localServerPort')
+  return `http://127.0.0.1:${serverPort}/file?fileId=${props.fileId}&partType=${props.partType}&fileType=${props.fileType}&showCover=true&forceGet=${props.forceGet}&${new Date().getTime()}`
 })
 </script>
 

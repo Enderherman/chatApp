@@ -38,7 +38,7 @@
 
 <script setup>
 import ShowLocalImage from '@/components/ShowLocalImage.vue'
-import { computed } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 
 //TODO preview预览
 const preview = computed(() => {
@@ -52,11 +52,35 @@ const props = defineProps({
   }
 })
 
+/**
+ * 头像上传
+ */
+const localFile = ref(null)
+const emit = defineEmits(['coverFile'])
 const uploadImage = async (file) => {
   file = file.file
-  //TODO 文件操作
-  window.ipcRenderer.send()
+  window.ipcRenderer.send('createCover', file.path)
 }
+
+onMounted(() => {
+  window.ipcRenderer.on('createCoverCallback', (event, { avatarStream, coverStream }) => {
+    const coverBlob = new Blob([coverStream], { type: 'image/jpeg' })
+    const coverFile = new File([coverBlob], 'cover.jpg', { type: 'image/jpeg' })
+    let img = new FileReader()
+    img.readAsDataURL(coverFile)
+    img.onload = (target) => {
+      localFile.value = target.target.result
+    }
+
+    const avatarBlob = new Blob([avatarStream], { type: 'image/jpeg' })
+    const avatarFile = new File([avatarBlob], 'avatar.jpg', { type: 'image/jpeg' })
+    emit('coverFile', { avatarFile, coverFile })
+  })
+})
+
+onUnmounted(() => {
+  window.ipcRenderer.removeAllListeners('createCoverCallback')
+})
 </script>
 
 <style scoped lang="less">

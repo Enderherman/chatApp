@@ -4,12 +4,20 @@
     :style="{ width: width + 'px ', height: width + 'px', 'border-radius': borderRadius + 'px' }"
     @click="showDetailHandler"
   >
-    <ShowLocalImage :width="width" :file-id="userId" part-type="avatar" :force-get="true">
+    <ShowLocalImage
+      :width="width"
+      :file-id="userId"
+      part-type="avatar"
+      :force-get="avatarInfoStore.getForceReload(userId)"
+    >
     </ShowLocalImage>
   </div>
 </template>
 
 <script setup>
+import { useAvatarInfoStore } from '@/stores/AvatarUploadStore'
+
+const avatarInfoStore = useAvatarInfoStore()
 //事件类型
 const props = defineProps({
   userId: {
@@ -33,7 +41,22 @@ const showDetailHandler = () => {
   if (!props.showDetail) {
     return
   }
-  //TODO 打开本地图 查看图片
+  window.ipcRenderer.send('newWindow', {
+    windowId: 'media',
+    title: '图片查看',
+    path: '/showMedia',
+    data: {
+      fileList: [
+        {
+          fileId: props.userId,
+          fileType: 0,
+          partType: 'avatar',
+          status: 1,
+          forceGet: true
+        }
+      ]
+    }
+  })
 }
 </script>
 

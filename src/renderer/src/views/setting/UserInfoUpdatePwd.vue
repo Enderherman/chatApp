@@ -81,7 +81,6 @@ const saveUserInfo = () => {
           return
         }
         Message.success('修改密码成功', () => {
-          //TODO重新登录还没写呢
           window.ipcRenderer.send('reLogin')
         })
       }

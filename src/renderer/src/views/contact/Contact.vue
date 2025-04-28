@@ -5,14 +5,14 @@
       <div class="drag-panel drag"></div>
       <!--2.搜索框-->
       <div class="top-search">
-        <el-input v-model="searchKey" clearable placeholder="搜索" size="small" @click="search">
+        <el-input v-model="searchKey" clearable placeholder="搜索" size="small" @keyup="search">
           <template #suffix>
             <span class="iconfont icon-search"></span>
           </template>
         </el-input>
       </div>
       <!--3.群聊联系人框-->
-      <div class="contact-list">
+      <div v-if="!searchKey" class="contact-list">
         <template v-for="item in partList" :key="item.id">
           <div class="part-title">{{ item.partName }}</div>
           <div class="part-list">
@@ -24,6 +24,7 @@
             >
               <div :class="['iconfont', sub.icon]" :style="{ background: sub.iconBgColor }"></div>
               <div class="text">{{ sub.name }}</div>
+              <Badge :count="messageCountStore.getCount(sub.countKey)" :top="3" :left="45"></Badge>
             </div>
             <template v-for="contact in item.contactData" :key="contact.id">
               <div
@@ -45,6 +46,13 @@
           </div>
         </template>
       </div>
+      <div v-show="searchKey" class="contact-list">
+        <SearchResult
+          v-for="item in searchList"
+          :data="item"
+          @click="searchClickHandler(item)"
+        ></SearchResult>
+      </div>
     </template>
     <template #right-content>
       <div class="title-panel drag">{{ rightTitle }}</div>
@@ -61,8 +69,12 @@ import { useRouter, useRoute } from 'vue-router'
 import Request from '@/utils/Request'
 import Api from '@/utils/Api'
 import { useContactStateStore } from '@/stores/ContactStateStore'
+import { useMessageCountStore } from '@/stores/MessageCountStore'
+import Badge from '@/components/Badge.vue'
+import SearchResult from '@/views/chat/SearchResult.vue'
 
 const contactStateStore = useContactStateStore()
+const messageCountStore = useMessageCountStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -127,8 +139,6 @@ const partList = ref([
   }
 ])
 
-const search = () => {}
-const searchKey = ref()
 const rightTitle = ref()
 const partJump = (data) => {
   if (data.showTitle) {
@@ -136,7 +146,10 @@ const partJump = (data) => {
   } else {
     rightTitle.value = null
   }
-  //TODO 处理联系人好友申请已读
+  if (data.countKey) {
+    messageCountStore.setCount(data.countKey, 0, true)
+    window.ipcRenderer.send('clearMessageCount')
+  }
   router.push(data.path)
 }
 
@@ -174,24 +187,69 @@ loadContact('USER')
 loadContact('GROUP')
 loadMyGroup()
 
-const getContactDetail = (contact, part) => {
-  if (part.showTitle) {
-    if (part.contactPath === '/contact/groupDetail') {
+const getContactDetail = (contact, item) => {
+  if (item.showTitle) {
+    if (item.contactPath === '/contact/groupDetail') {
       // 群聊，右上角显示：群聊名（人数）
-      rightTitle.value = `${contact[part.contactName]} (${contact.memberCount || 0})`
+      rightTitle.value = `${contact[item.contactName]} (${contact.memberCount || 0})`
     } else {
       // 不是群聊，直接显示名称
-      rightTitle.value = contact[part.contactName]
+      rightTitle.value = contact[item.contactName]
     }
   } else {
     rightTitle.value = null
   }
   router.push({
-    path: part.contactPath,
+    path: item.contactPath,
     query: {
-      contactId: contact[part.contactId]
+      contactId: contact[item.contactId]
     }
   })
+}
+
+/**
+ * 搜索联系人
+ */
+const searchKey = ref()
+const searchList = ref([])
+const allContactList = ref([])
+const search = () => {
+  if (!searchKey.value) {
+    return
+  }
+  searchList.value = []
+  allContactList.value = []
+  const regex = new RegExp('(' + searchKey.value + ')', 'gi')
+
+  partList.value.forEach((item) => {
+    if (item.contactData) {
+      allContactList.value.push(...item.contactData)
+    }
+  })
+  console.log('allContactList: ', allContactList.value)
+  allContactList.value.forEach((item) => {
+    let contactName = item.groupId ? item.groupName : item.contactName
+    if (contactName.includes(searchKey.value)) {
+      let newData = Object.assign({}, item)
+      newData.searchContactName = contactName.replace(regex, "<span class='highlight'>$1</span>")
+      newData.contactId = item.groupId ? item.groupId : item.contactId
+      searchList.value.push(newData)
+    }
+  })
+  console.log('searchList: ', searchList.value)
+}
+const searchClickHandler = (item) => {
+  searchKey.value = undefined
+  router.push({
+    path: '/chat',
+    query: {
+      chatId: item.contactId,
+      timestamp: new Date().getTime()
+    }
+  })
+  rightTitle.value = item.searchContactName
+
+  searchList.value = []
 }
 
 watch(

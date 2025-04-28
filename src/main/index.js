@@ -9,8 +9,33 @@ import {
   onLoginSuccess,
   winTitleOp,
   onSetLocalStore,
-  onGetLocalStore
+  onGetLocalStore,
+  onLoadChatSession,
+  onDeleteChatSession,
+  onTopChatSession,
+  onLoadChatMessage,
+  onAddChatMessage,
+  onSetSessionSelect,
+  onCreateCover,
+  onOpenNewWindow,
+  onSaveAs,
+  onSaveClipBoardFile,
+  onLoadContactApply,
+  onClearContactApplyCount,
+  onLoginOut,
+  onOpenLocalFolder,
+  onGetSysSetting,
+  onChangeLocalFolder,
+  onReloadChatSession,
+  onOpenUrl,
+  onDownloadUpdate,
+  onLoadLocalUser
 } from './ipc'
+import { saveWindow } from './windowProxy'
+import store from './store'
+
+// 禁用 DNS over HTTPS
+app.commandLine.appendSwitch('disable-features', 'DnsOverHttps')
 
 //打开控制台
 // const NODE_ENV = process.env.NODE_ENV
@@ -41,6 +66,8 @@ function createWindow() {
       contextIsolation: false
     }
   })
+
+  saveWindow('main', mainWindow)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -131,15 +158,27 @@ function createWindow() {
         win.minimize()
         break
       }
+      // 在index.js中
       case 'maximize': {
-        win.maximize()
+        // 保存当前窗口大小和位置
+        const bounds = win.getBounds()
+        store.setUserData('previousBounds', bounds)
+
+        // 获取屏幕尺寸并填满
+        const { width, height } = require('electron').screen.getPrimaryDisplay().workAreaSize
+        win.setBounds({ x: 0, y: 0, width, height })
         break
       }
+
       case 'unmaximize': {
-        win.setFullScreen(false)
-        win.unmaximize()
+        // 恢复到之前保存的窗口大小和位置
+        const previousBounds = store.getUserData('previousBounds')
+        if (previousBounds) {
+          win.setBounds(previousBounds)
+        }
         break
       }
+
       case 'top': {
         win.setAlwaysOnTop(data.top)
         break
@@ -148,7 +187,55 @@ function createWindow() {
   })
 
   onSetLocalStore()
+
   onGetLocalStore()
+
+  onLoadChatSession()
+
+  onDeleteChatSession()
+
+  onTopChatSession()
+
+  onLoadChatMessage()
+
+  onAddChatMessage()
+
+  onSetSessionSelect()
+
+  onCreateCover()
+
+  onOpenNewWindow()
+
+  onSaveAs()
+
+  onSaveClipBoardFile()
+
+  onLoadContactApply()
+
+  onClearContactApplyCount()
+
+  onLoginOut(() => {
+    mainWindow.setResizable(true)
+    mainWindow.setMinimumSize(login_width, login_height)
+    mainWindow.setSize(login_width, login_height)
+    mainWindow.center()
+    mainWindow.setResizable(false)
+    mainWindow.setSkipTaskbar(true)
+  })
+
+  onOpenLocalFolder()
+
+  onGetSysSetting()
+
+  onChangeLocalFolder()
+
+  onReloadChatSession()
+
+  onOpenUrl()
+
+  onDownloadUpdate()
+
+  onLoadLocalUser()
 }
 
 // This method will be called when Electron has finished

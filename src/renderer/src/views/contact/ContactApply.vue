@@ -21,7 +21,7 @@
                 <el-button type="primary" size="small">处理请求</el-button></span
               >
               <template #dropdown>
-                <el-dropdown-item @click="dealWithApply(item.applyld, item.contactType, 1)"
+                <el-dropdown-item @click="dealWithApply(item.applyId, item.contactType, 1)"
                   >同意
                 </el-dropdown-item>
                 <el-dropdown-item @click="dealWithApply(item.applyId, item.contactType, 2)"
@@ -45,11 +45,12 @@
 import Confirm from '@/utils/Confirm'
 import Request from '@/utils/Request'
 import Api from '@/utils/Api'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useContactStateStore } from '@/stores/ContactStateStore'
+import { useMessageCountStore } from '@/stores/MessageCountStore'
 
 const contactStateStore = useContactStateStore()
-
+const messageCountStore = useMessageCountStore()
 //获取申请
 let pageNo = 0
 let pageTotal = 10
@@ -100,8 +101,17 @@ const dealWithApply = (applyId, contactType, status) => {
   })
 }
 
-//TODO 监听新朋友圈数量
-
+//监听新朋友圈数量
+watch(
+  () => messageCountStore.messageCount.contactApplyCount,
+  (newVal, oldVal) => {
+    if (newVal) {
+      loadApply()
+      pageNo = 1
+    }
+  },
+  { immediate: true, deep: true }
+)
 onMounted(() => loadApply())
 </script>
 

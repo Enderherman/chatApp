@@ -53,8 +53,10 @@ import AreaSelect from '@/components/AreaSelect.vue'
 import { computed, ref } from 'vue'
 import Message from '@/plugin/Message'
 import { useUserInfoStore } from '@/stores/UserInfoStore'
+import { useAvatarInfoStore } from '@/stores/AvatarUploadStore'
 
 const userInfoStore = useUserInfoStore()
+const avatarInfoStore = useAvatarInfoStore()
 const props = defineProps({
   data: {
     type: Object
@@ -80,6 +82,7 @@ const rules = {
 //保存头像
 const saveCover = ({ avatarFile, coverFile }) => {
   formData.value.avatarFile = avatarFile
+
   formData.value.coverFile = coverFile
 }
 
@@ -100,8 +103,8 @@ const saveUserInfo = () => {
       params.areaName = params.area.areaName.join(',')
       delete params.area
     }
-    //TODO刷新头像
-
+    //刷新头像
+    avatarInfoStore.setForceReload(userInfoStore.getInfo().userId, false)
     let result = await Request({
       url: Api.saveUserInfo,
       params: params
@@ -111,7 +114,8 @@ const saveUserInfo = () => {
     }
     Message.success('保存成功')
     userInfoStore.setInfo(result.data)
-    //TODO刷新头像
+    //刷新头像
+    avatarInfoStore.setForceReload(userInfoStore.getInfo().userId, true)
     emit('editBack')
   })
 }

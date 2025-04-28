@@ -1,7 +1,9 @@
 <template>
   <div class="main">
     <div class="left-sider">
-      <div></div>
+      <div>
+        <Avatar :user-id="userInfoStore.getInfo().userId" :width="36"></Avatar>
+      </div>
       <div class="menu-list">
         <template v-for="item in menuList">
           <div
@@ -13,7 +15,9 @@
             ]"
             @click="changeMenu(item)"
           >
-            <template v-if="item.name === 'chat'"></template>
+            <template v-if="item.name === 'chat' || item.name === 'contact'">
+              <Badge :count="messageCountStore.getCount(item.countKey)" :top="3" :left="15"></Badge>
+            </template>
           </div>
         </template>
       </div>
@@ -40,14 +44,26 @@
     </div>
   </div>
   <WinOp></WinOp>
+  <Update></Update>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import Request from '@/utils/Request'
+import Api from '@/utils/Api'
+import { useUserInfoStore } from '@/stores/UserInfoStore'
+import { useGlobalInfoStore } from '@/stores/GlobalInfoStore'
+import { useSysSettingStore } from '@/stores/SystemSettingStore'
+import { useMessageCountStore } from '@/stores/MessageCountStore'
+import Update from '@/views/Update.vue'
 
+const messageCountStore = useMessageCountStore()
+const userInfoStore = useUserInfoStore()
+const globalInfoStore = useGlobalInfoStore()
+const sysSettingStore = useSysSettingStore()
 const router = useRouter()
-
+const route = useRoute()
 const menuList = ref([
   {
     name: 'chat',
@@ -78,12 +94,6 @@ const changeMenu = (item) => {
   router.push(item.path)
 }
 
-import { useUserInfoStore } from '@/stores/UserInfoStore'
-
-const userInfoStore = useUserInfoStore()
-import Request from '@/utils/Request'
-import Api from '@/utils/Api'
-
 const getLoginInfo = async () => {
   let result = await Request({
     url: Api.getUserInfo,
@@ -93,10 +103,52 @@ const getLoginInfo = async () => {
     return result
   }
   userInfoStore.setInfo(result.data)
+  window.ipcRenderer.send('getLocalStore', result.data.userId + 'localServerPort')
+}
+
+const getSystemSetting = async () => {
+  let result = await Request({
+    url: Api.getSysSetting
+  })
+  if (!result) {
+    return result
+  }
+  //console.log('sysSetting', result.data)
+  sysSettingStore.setSetting(result.data)
+}
+
+const menuSelect = (path) => {
+  currentValue.value = menuList.value.find((item) => {
+    return path.includes(item.path)
+  })
 }
 
 onMounted(() => {
   getLoginInfo()
+  getSystemSetting()
+  window.ipcRenderer.on('getLocalStoreCallback', (e, serverPort) => {
+    globalInfoStore.setInfo('localServerPort', serverPort)
+  })
+
+  //退出登录跳转到登录界面
+  window.ipcRenderer.on('reLogin', () => {
+    router.push('/login')
+  })
+})
+
+watch(
+  () => route.path,
+  (newVal, oldVal) => {
+    if (newVal) {
+      menuSelect(newVal)
+    }
+  },
+  { immediate: true, deep: true }
+)
+
+onUnmounted(() => {
+  window.ipcRenderer.removeAllListeners('getLocalStoreCallback')
+  window.ipcRenderer.removeAllListeners('reLogin')
 })
 </script>
 

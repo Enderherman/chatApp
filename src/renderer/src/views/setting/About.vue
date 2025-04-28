@@ -10,13 +10,20 @@
       </div>
     </el-form-item>
   </ContentPanel>
+  <Update ref="updateRef" :auto-update="false"></Update>
 </template>
 
 <script setup>
 import config from '../../../../../package.json'
-//TODO 检查更新
+import Update from '@/views/Update.vue'
+import { ref } from 'vue'
+
+/**
+ * 检查更新
+ */
+const updateRef = ref()
 const checkUpdate = () => {
-  console.log('checkUpdate' + 'TODO 没写呢')
+  updateRef.value.checkUpdate()
 }
 </script>
 

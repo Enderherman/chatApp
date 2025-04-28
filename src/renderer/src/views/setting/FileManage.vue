@@ -10,34 +10,56 @@
     >
       <el-form-item label="文件管理" prop="" class="file-manage">
         <div class="file-input" :title="formData.sysSetting">
-          {{ formData.sysSetting === '' ? formData.sysSetting : 'TODO没写呢' }}
+          {{ formData.sysSetting }}
         </div>
         <div class="tips">文件的默认保存位置</div>
       </el-form-item>
       <el-form-item label="" prop="">
-        <el-button type="primary" @click="changeFolder">保存更改</el-button>
         <el-button type="primary" @click="openLocalFolder">打开文件夹</el-button>
+        <el-button type="primary" @click="changeFolder">更改存储路径</el-button>
       </el-form-item>
     </el-form>
   </ContentPanel>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const formData = ref({})
 const formDataRef = ref()
 const rules = {}
 
-const copying = ref(false)
-
-//TODO 获取文件缓存路径
+/**
+ * 获取文件存储目录
+ */
+const getSysSetting = () => {
+  window.ipcRenderer.send('getSysSetting')
+}
 
 //保存更改目录
-const changeFolder = () => {}
+const copying = ref(false)
+const changeFolder = () => {
+  window.ipcRenderer.send('changeLocalFolder')
+}
 
 //打开文件夹
-const openLocalFolder = () => {}
+const openLocalFolder = () => {
+  window.ipcRenderer.send('openLocalFolder')
+}
+
+onMounted(() => {
+  getSysSetting()
+  window.ipcRenderer.on('getSysSettingCallback', (event, sysSetting) => {
+    copying.value = false
+    sysSetting = JSON.parse(sysSetting)
+    formData.value = {
+      sysSetting: sysSetting.localFileFolder
+    }
+  })
+  window.ipcRenderer.on('copyCallback', (event) => {
+    copying.value = true
+  })
+})
 </script>
 
 <style scoped lang="less">

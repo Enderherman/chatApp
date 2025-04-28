@@ -22,12 +22,14 @@ import UserBaseInfo from '@/components/UserBaseInfo.vue'
 import Dialog from '@/components/Dialog.vue'
 import Avatar from '@/components/Avatar.vue'
 import AvatarUpload from '@/components/AvatarUpload.vue'
+import Badge from '@/components/Badge.vue'
 
 const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
 app.use(Pinia.createPinia())
 
+app.component('Badge', Badge)
 app.component('AvatarUpload', AvatarUpload)
 app.component('Avatar', Avatar)
 app.component('DialogX', Dialog)

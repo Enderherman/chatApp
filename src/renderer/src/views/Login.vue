@@ -6,21 +6,36 @@
     </div>
     <div v-else class="login-form">
       <div class="error-msg">{{ errorMsg }}</div>
-      <el-form :model="formData" ref="formDataRef" label-width="" @submit.prevent>
+      <el-form ref="formDataRef" :model="formData" label-width="" @submit.prevent>
         <!--邮箱-->
         <el-form-item label="" prop="email">
-          <el-input
-            size="large"
-            clearable
-            placeholder="请输入邮箱"
-            maxLength="30"
-            v-model.trim="formData.email"
-            @focus="cleanVerify"
-          >
-            <template #prefix>
-              <span class="iconfont icon-email"></span>
-            </template>
-          </el-input>
+          <div class="email-panel">
+            <el-input
+              size="large"
+              clearable
+              placeholder="请输入邮箱"
+              maxLength="30"
+              v-model.trim="formData.email"
+              @focus="cleanVerify"
+            >
+              <template #prefix>
+                <span class="iconfont icon-email"></span>
+              </template>
+            </el-input>
+            <el-dropdown v-if="isLogin && localUserList.length > 0" trigger="click">
+              <span class="iconfont icon-down"></span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    v-for="item in localUserList"
+                    :key="item.email"
+                    @click="formData.email = item.email"
+                    >{{ item.email }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
         </el-form-item>
         <!--注册邮箱-->
         <el-form-item label="" prop="nickName" v-if="!isLogin">
@@ -107,7 +122,7 @@ import Request from '@/utils/Request'
 import Utils from '@/utils/Utils'
 import Verify from '@/utils/Verify'
 import Message from '@/plugin/Message'
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import md5 from 'js-md5'
 import { useUserInfoStore } from '@/stores/UserInfoStore'
 
@@ -266,10 +281,24 @@ const init = () => {
   window.ipcRenderer.send('setLocalStore', { key: 'devDomain', val: Api.devDomain })
   window.ipcRenderer.send('setLocalStore', { key: 'prodWsDomain', val: Api.prodWsDomain })
   window.ipcRenderer.send('setLocalStore', { key: 'devWsDomain', val: Api.devWsDomain })
+  window.ipcRenderer.send('loadLocalUser')
+
+  window.ipcRenderer.on('loadLocalUserCallback', (event, userList) => {
+    localUserList.value = userList
+  })
 }
+
+/**
+ * 本地用户列表
+ */
+const localUserList = ref([])
 
 onMounted(() => {
   init()
+})
+
+onUnmounted(()=>{
+  window.ipcRenderer.removeAllListeners('loadLocalUserCallback')
 })
 </script>
 
@@ -303,7 +332,7 @@ onMounted(() => {
   .login-form {
     padding: 0 15px 29px 15px;
 
-    :deep(.el-input_wrapper) {
+    :deep(.el-input__wrapper) {
       box-shadow: none;
       border-radius: 0;
     }

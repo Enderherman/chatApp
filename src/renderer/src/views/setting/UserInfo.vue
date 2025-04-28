@@ -47,6 +47,7 @@ import Request from '@/utils/Request'
 import { onMounted, ref } from 'vue'
 import UserInfoEdit from '@/views/setting/UserInfoEdit.vue'
 import UserInfoUpdatePwd from '@/views/setting/UserInfoUpdatePwd.vue'
+import Confirm from '@/utils/Confirm'
 
 //获取用户信息
 const userInfo = ref({})
@@ -66,8 +67,19 @@ const changePart = (part) => {
   showType.value = part
 }
 
-//TODO 退出登录
-const logout = () => {}
+//退出登录
+const logout = () => {
+  Confirm({
+    message: '确定要退出登录吗',
+    showCancelBtn: true,
+    okfun: async () => {
+      window.ipcRenderer.send('reLogin')
+      await Request({
+        url: Api.logout
+      })
+    }
+  })
+}
 
 //回调刷新值
 const editBack = () => {

@@ -1,14 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { component } from 'v-viewer'
 
 const router = createRouter({
-  mode: 'hash',
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: '默认路径',
       redirect: '/login'
+    },
+    {
+      path: '/showMedia',
+      name: '媒体信息',
+      component: () => import('@/views/show/ShowMedia.vue')
     },
     {
       path: '/login',
@@ -54,7 +57,7 @@ const router = createRouter({
             },
             {
               path: '/contact/userDetail',
-              name: '用户详情',
+              name: '联系人详情',
               component: () => import('@/views/contact/UserDetail.vue')
             },
             {
@@ -78,7 +81,8 @@ const router = createRouter({
               path: '/setting/about',
               name: '关于',
               component: () => import('@/views/setting/About.vue')
-            },{
+            },
+            {
               path: '/setting/fileManage',
               name: '文件管理',
               component: () => import('@/views/setting/FileManage.vue')

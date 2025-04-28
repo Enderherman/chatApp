@@ -1,5 +1,5 @@
 <template>
-  <div class="top drag"> </div>
+  <div class="top drag"></div>
   <div class="iconfont icon-chat"></div>
 </template>
 
@@ -16,6 +16,6 @@
   justify-content: center;
   font-size: 100px;
   color: #ddd;
-  height: calc(100vh - 242px);
+  height: calc(100vh - 130px);
 }
 </style>
