@@ -1,0 +1,340 @@
+<changelist name="在变基之前未提交的更改_[Changes]" date="1743193740322" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/在变基之前未提交的更改_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="在变基之前未提交的更改 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/UserContactService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/po/UserContact.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/UserContactApplyService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/GroupInfoService.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/UserContactApplyQuery.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/impl/UserContactServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/dto/SysSettingDto.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/SimplePage.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/UserContactApplyMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/impl/UserContactApplyServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/annotation/GlobalInterceptor.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/controller/GroupInfoController.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/exception/BusinessException.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/test/SocketServer.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/UserContactQuery.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/GroupInfoQuery.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/aspect/GlobalOperationAspect.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/UserContactApplyQuery.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/common/ResponseCodeEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/GroupInfoMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/component/RedisComponent.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/PageSize.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/UserInfoMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/test/SocketClient.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/config/RedisConfig.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/JoinTypeEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/UserContactApplyService.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/vo/UserInfoVO.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/controller/UserInfoController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/UserInfoBeautyQuery.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/aspect/GlobalOperationAspect.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/UserContactTypeEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/BeautyAccountStatusEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/application.properties" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/dto/TokenUserInfoDto.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/controller/ABaseController.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/constants/Constants.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/UserStatusEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/impl/UserContactApplyServiceImpl.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/po/UserInfoBeauty.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/UserInfoQuery.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/impl/GroupInfoServiceImpl.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/BaseMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/UserInfoBeautyQuery.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/BaseMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/DateTimePatternEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/controller/GroupInfoController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/dto/SysSettingDto.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/resources/application.properties" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/po/UserContactApply.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/impl/GroupInfoServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/annotation/GlobalInterceptor.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/common/BaseResponse.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/UserInfoQuery.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/impl/UserInfoBeautyServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/po/UserContactApply.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/vo/PaginationResultVO.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/JoinTypeEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/UserContactMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/vo/UserInfoVO.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/UserInfoBeautyService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/exception/BusinessException.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/GroupInfoQuery.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/utils/CopyUtils.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/controller/AGlobalExceptionHandlerController.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/GroupInfoService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/UserContactTypeEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/utils/StringUtils.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/UserInfoMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/BaseParam.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/query/UserContactQuery.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/config/AppConfig.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/controller/ABaseController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/UserInfoBeautyService.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/PageSize.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/po/UserContact.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/po/UserInfoBeauty.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/enums/BeautyAccountStatusEnum.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/UserContactMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/UserStatusEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/po/UserInfo.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/impl/UserInfoServiceImpl.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/DateTimePatternEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../logs/easychat.log.20250313.0" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/po/UserInfo.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/SimplePage.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/query/BaseParam.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/dto/TokenUserInfoDto.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../logs/easychat.log.20250312.0" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/UserInfoService.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/controller/AGlobalExceptionHandlerController.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/po/GroupInfo.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/UserInfoService.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/UserInfoBeautyMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/service/impl/UserInfoServiceImpl.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/mappers/GroupInfoMapper.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/utils/RedisUtils.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/utils/DateUtils.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/entity/dto/TokenUserInfoDto$TokenUserInfoDtoBuilder.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/EasyChatApplication.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/test/SocketServer.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/UserContactApplyMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/EasyChatApplication.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/impl/UserInfoBeautyServiceImpl.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/test/SocketClient.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/po/GroupInfo.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/controller/UserInfoController.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/target/classes/top/enderherman/easychat/mappers/UserInfoBeautyMapper.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/enums/UserContactStatusEnum.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/UserContactService.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/entity/vo/PaginationResultVO.java" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="../easychat-back/src/main/java/top/enderherman/easychat/service/impl/UserContactServiceImpl.java" />
+  </binary>
+</changelist>

@@ -35,15 +35,15 @@ const api = {
   loadGroup: '/admin/loadGroup', //群组列表
   adminDissolutionGroup: '/admin/dissolutionGroup', //解散群组
   saveSysSetting: '/admin/saveSysSetting', //保存系统设置
-  getSysSetting4Admin: '/admin/getSysSetting', //获取系统设置
-  loadUpdateDatalist: '/admin/loadUpdateList', //获取更新列表
-  delUpdate: '/admin/delUpdate ', //删除更新
-  saveUpdate: '/admin/saveUpdate', //保存更新
-  postUpdate: '/admin/postUpdate', //发布更新
-  loadBeautyAccount: '/admin/loadBeautyAccountList', //靓号列表
-  saveBeautAccount: '/admin/saveBeautAccount', //保存靓号
-  delBeautAccount: '/admin/delBeautAccount', //删除靓号
-  checkVersion: '/update/checkVersion' //更新检测
+  getSysSetting4Admin: '/admin/getSystemSetting', //获取系统设置
+  loadUpdateDatalist: '/app/loadUpdateList', //获取更新列表
+  delUpdate: '/app/deleteUpdate ', //删除更新
+  saveUpdate: '/app/saveUpdate', //保存更新
+  postUpdate: '/app/postUpdate', //发布更新
+  loadBeautyAccount: '/userInfoBeauty/loadBeautyAccountList', //靓号列表
+  saveBeautAccount: '/userInfoBeauty/saveBeautyAccount', //保存靓号
+  delBeautAccount: '/userInfoBeauty/deleteBeautyAccount', //删除靓号
+  checkVersion: '/app/checkUpdate' //更新检测
 }
 
 export default api

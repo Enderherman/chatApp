@@ -49,6 +49,7 @@ const createWs = () => {
   ws.onmessage = async function (e) {
     console.log('收到服务器消息', e.data)
     const message = JSON.parse(e.data)
+    const leaveGroupUserId = message.extentData
     const messageType = message.messageType
     switch (messageType) {
       case 0:
@@ -107,18 +108,20 @@ const createWs = () => {
 
         console.log('before update:', sessionInfo, '\ncurTime:', new Date().getTime())
         //更新session
-          await saveOrUpdateChatSessionByMessage(store.getUserData('currentSessionId'), sessionInfo)
+        await saveOrUpdateChatSessionByMessage(store.getUserData('currentSessionId'), sessionInfo)
         await saveOrUpdateChatSessionByMessage(store.getUserData('currentSessionId'), sessionInfo)
         //写入本地消息
         await saveMessage(message)
         const dbSessionInfo = await selectUserSessionByContactId(message.contactId)
         message.extentData = dbSessionInfo
-        sender.send('receiveMessage', message)
+        //退出群聊 当前用户不受到信息
+        if (messageType === 11 && leaveGroupUserId === store.getUserId())
+          sender.send('receiveMessage', message)
         break
     }
   }
 
-  //
+   //
   ws.onclose = function () {
     console.log('关闭客户端准备冲连')
     reconnect()

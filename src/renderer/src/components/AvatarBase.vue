@@ -34,6 +34,10 @@ const props = defineProps({
   showDetail: {
     type: Boolean,
     default: false
+  },
+  partType: {
+    type: String,
+    default: 'avatar'
   }
 })
 

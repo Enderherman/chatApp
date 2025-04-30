@@ -65,7 +65,7 @@ const checkUpdateAuto = async (auto) => {
   let result = await Request({
     url: Api.checkVersion,
     params: {
-      appVersion: version,
+      version: version,
       token: localStorage.getItem('token'),
       uid: userInfoStore.getInfo().userId
     }
@@ -111,7 +111,9 @@ const startDownload = async () => {
       fileName: updateInfo.value.fileName
     })
   } else if (updateInfo.value.fileType === 1) {
-    window.ipcRenderer.send('OpenUrl', { url: updateInfo.value.outerLink })
+    Message.success('已在浏览器中打开更新链接')
+    window.ipcRenderer.send('openUrl', { url: updateInfo.value.outerLink })
+    showUpdate.value = false
   }
 }
 

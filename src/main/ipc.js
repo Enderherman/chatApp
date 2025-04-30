@@ -379,5 +379,6 @@ export {
   onReloadChatSession,
   onOpenUrl,
   onDownloadUpdate,
-  onLoadLocalUser
+  onLoadLocalUser,
+  openWindow
 }

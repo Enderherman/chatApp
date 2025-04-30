@@ -29,7 +29,8 @@ import {
   onReloadChatSession,
   onOpenUrl,
   onDownloadUpdate,
-  onLoadLocalUser
+  onLoadLocalUser,
+  openWindow
 } from './ipc'
 import { saveWindow } from './windowProxy'
 import store from './store'
@@ -128,7 +129,22 @@ function createWindow() {
     //最小的窗口大小
     mainWindow.setMinimumSize(800, 600)
     if (config.admin) {
-      //TODO 管理员新界面,托盘操作
+      //管理员新界面,托盘操作
+      contextMenu.unshift({
+        label: '管理后台',
+        click: function () {
+          openWindow({
+            windowId: 'admin',
+            title: '管理后台',
+            path: '/admin',
+            width: config.screenWidth * 0.75,
+            height: config.screenHeight * 0.75,
+            data: {
+              token: config.token
+            }
+          })
+        }
+      })
     }
     //展示用户信息
     contextMenu.unshift({

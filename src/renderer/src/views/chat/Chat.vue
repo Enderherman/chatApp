@@ -102,6 +102,11 @@
   ></ChatGroupDetail>
 </template>
 
+<script>
+export default {
+  name: 'chat'
+}
+</script>
 <script setup>
 import ChatMessageTime from '@/views/chat/ChatMessageTime.vue'
 import ChatMessage from '@/views/chat/ChatMessage.vue'
@@ -439,6 +444,7 @@ const setTop = (data) => {
 //删除会话
 const deleteChatSession = (contactId) => {
   deleteChatSessionFromList(contactId)
+  setSessionSelect({})
   currentChatSession.value = {}
   window.ipcRenderer.send('deleteChatSession', contactId)
 }

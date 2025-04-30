@@ -61,7 +61,7 @@ const addUserSetting = async (userId, email) => {
     })
     resultServerPort = serverPort
   }
-  //TODO 启动本地服务
+  //启动本地服务
   startLocalServer(resultServerPort)
   store.setUserData('localServerPort', resultServerPort)
   store.setUserData('localFileFolder', localFileFolder)

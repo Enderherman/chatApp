@@ -23,7 +23,7 @@ import Dialog from '@/components/Dialog.vue'
 import Avatar from '@/components/Avatar.vue'
 import AvatarUpload from '@/components/AvatarUpload.vue'
 import Badge from '@/components/Badge.vue'
-
+import Table from '@/components/Table.vue'
 const app = createApp(App)
 app.use(ElementPlus)
 app.use(router)
@@ -38,6 +38,7 @@ app.component('ShowLocalImage', ShowLocalImage)
 app.component('Layout', Layout)
 app.component('WinOp', WinOp)
 app.component('ContentPanel', ContentPanel)
+app.component('TableX', Table)
 
 app.config.globalProperties.Utils = Utils
 app.config.globalProperties.Verify = Verify
