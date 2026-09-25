@@ -2,6 +2,8 @@
 
 WeTalkApp 是 WeTalk 的 Electron 桌面客户端，使用 Vue 3、Vite、Pinia 和 Element Plus 构建。它通过 HTTP API 和 WebSocket 连接 wetalk 后端，并使用 Electron main/preload 提供本地文件、SQLite 缓存和桌面窗口能力。
 
+GitHub 仓库：[Enderherman/WeTalkApp](https://github.com/Enderherman/WeTalkApp)
+
 ## 环境要求
 
 - Node.js 与 npm
