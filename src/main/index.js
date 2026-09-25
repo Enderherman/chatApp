@@ -34,6 +34,7 @@ import {
 } from './ipc'
 import { saveWindow } from './windowProxy'
 import store from './store'
+import { ensureAppDirectories } from './utils/platformUtils'
 
 // 禁用 DNS over HTTPS
 app.commandLine.appendSwitch('disable-features', 'DnsOverHttps')
@@ -51,7 +52,7 @@ const register_height = 490
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    title: '原梦通讯',
+    title: '微语',
     width: login_width,
     height: login_height,
     show: false,
@@ -72,7 +73,7 @@ function createWindow() {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
-    mainWindow.setTitle('原梦通讯')
+    mainWindow.setTitle('微语')
   })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -92,14 +93,14 @@ function createWindow() {
   const tray = new Tray(icon)
   const contextMenu = [
     {
-      label: '退出原梦通讯',
+      label: '退出微语',
       click: function () {
         app.exit(0)
       }
     }
   ]
   const menu = Menu.buildFromTemplate(contextMenu)
-  tray.setToolTip('原梦通讯')
+  tray.setToolTip('微语')
   tray.setContextMenu(menu)
   tray.on('click', () => {
     mainWindow.setSkipTaskbar(false)
@@ -267,6 +268,9 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+
+  // 确保应用目录结构
+  ensureAppDirectories()
 
   createWindow()
 

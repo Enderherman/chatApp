@@ -4,7 +4,7 @@ const fs = require('fs')
 const fse = require('fs-extra')
 const NODE_ENV = process.env.NODE_ENV
 const path = require('path')
-const { app, ipcMain, shell } = require('electron')
+const { app, shell } = require('electron')
 const { exec } = require('child_process')
 const FormData = require('form-data') //引入FormData模块（用于构建表单数据)
 const axios = require('axios') // 引入axios库
@@ -12,6 +12,15 @@ import store from './store'
 import { dialog } from 'electron'
 import { selectSettingInfo, updateSysSetting } from './database/UserSettingModel'
 import { getWindow } from './windowProxy'
+
+// 引入 ffmpeg 相关包
+const ffmpeg = require('fluent-ffmpeg')
+const ffmpegPath = require('ffmpeg-static')
+const ffprobePath = require('ffprobe-static').path
+
+// 配置 ffmpeg 路径
+ffmpeg.setFfmpegPath(ffmpegPath)
+ffmpeg.setFfprobePath(ffprobePath)
 
 const moment = require('moment')
 moment.locale(' zh-cn', {})
@@ -23,45 +32,6 @@ const expressServer = express()
 const cover_image_suffix = '_cover.png'
 const image_suffix = '.png'
 
-const ffprobePath = '/assets/ffprobe.exe'
-const ffmpegPath = '/assets/ffmpeg.exe'
-//保存到本地
-// const saveFileToLocal = (messageId, filePath, fileType) => {
-//   return new Promise(async (resolve, reject) => {
-//     let savePath = await getLocalFilePath('chat', false, messageId)
-//     console.log('localSave: ', savePath)
-//     savePath = path.normalize(savePath)
-//     let ffprobePath = getFFprobePath()
-//     let ffmpegPath = getFFmpegPath()
-//     let coverPath = null
-//     //复制文件
-//     fs.copyFileSync(filePath, savePath)
-//     console.log('目标路径: ', filePath)
-//     if (fileType !== 2) {
-//       let command = `"${ffprobePath}" -v error -select_streams v:0 -show_entries stream=codec_name "${filePath}"`
-//       //1.获取类型
-//       let result = await execCommand(command)
-//       result = result.replaceAll('\r\n', '')
-//       result = result.substring(result.indexOf('=') + 1)
-//       let codeName = result.substring(0, result.indexOf('[')).trim()
-//       console.log('codename:', codeName)
-//       if (codeName === 'hevc') {
-//         //2.1 先删除一下复制
-//         fs.rmSync(savePath)
-//         command = `"${ffmpegPath}" -y -i  "${filePath}" -c:v libx264 -crf 20 "${savePath}"`
-//         //2.2 转译下格式
-//         await execCommand(command)
-//       }
-//       coverPath = savePath + cover_image_suffix
-//       //3.生成缩略图
-//       command = `"${ffmpegPath}" -i "${savePath}" -y -vframes 1 -vf "scale=min(170\\, iw*min(170/iw\\,170/ih)):min(170\\, ih*min(170/iw\\,170/ih))" "${coverPath}"`
-//       await execCommand(command)
-//     }
-//     //上传文件
-//     await uploadFile(messageId, savePath, coverPath)
-//     resolve()
-//   })
-// }
 /**
  * 将文件保存到本地并处理
  * @param {string} messageId - 消息ID
@@ -74,40 +44,120 @@ const saveFileToLocal = async (messageId, filePath, fileType) => {
     // 获取保存路径
     let savePath = await getLocalFilePath('chat', false, messageId)
     savePath = path.normalize(savePath)
-    // 获取工具路径
-    const ffprobePath = getFFprobePath()
-    const ffmpegPath = getFFmpegPath()
     let coverPath = null
     // 复制文件
     fs.copyFileSync(filePath, savePath)
     // 处理非文件类型文件
     if (fileType !== 2) {
       // 1.获取视频编码类型
-      let command = `"${ffprobePath}" -v error -select_streams v:0 -show_entries stream=codec_name "${filePath}"`
-      let result = await execCommand(command)
-      result = result.replaceAll('\r\n', '')
-      result = result.substring(result.indexOf('=') + 1)
-      let codeName = result.substring(0, result.indexOf('[')).trim()
+      const codecInfo = await getVideoCodec(filePath)
+      const codeName = codecInfo ? codecInfo.toLowerCase() : ''
       console.log('codename:', codeName)
+
       // 2.如果是HEVC格式，转换为H.264
       if (codeName === 'hevc') {
+        console.log(filePath, '是hevc')
         // 2.1 先删除复制的文件
         fs.rmSync(savePath)
         // 2.2 转换格式
-        command = `"${ffmpegPath}" -y -i "${filePath}" -c:v libx264 -crf 20 "${savePath}"`
-        await execCommand(command)
+        await convertHevcToH264(filePath, savePath)
       }
+
       // 3.生成缩略图
       coverPath = savePath + cover_image_suffix
-      command = `"${ffmpegPath}" -i "${savePath}" -y -vframes 1 -vf "scale=min(170\\, iw*min(170/iw\\,170/ih)):min(170\\, ih*min(170/iw\\,170/ih))" "${coverPath}"`
-      await execCommand(command)
+      await generateThumbnail(savePath, coverPath)
     }
     // 上传文件
     await uploadFile(messageId, savePath, coverPath)
   } catch (error) {
-    console.error('保存文件失败:111111111111111111111111111111111111', error)
+    console.error('保存文件失败:', error)
     throw error
   }
+}
+
+/**
+ * 获取视频编码类型
+ * @param {string} filePath - 文件路径
+ * @returns {Promise<string>} - 编码类型
+ */
+const getVideoCodec = (filePath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(filePath, (err, metadata) => {
+      if (err) {
+        console.error('获取视频编码信息失败:', err)
+        reject(err)
+        return
+      }
+
+      const videoStream = metadata.streams.find((stream) => stream.codec_type === 'video')
+      if (videoStream) {
+        resolve(videoStream.codec_name)
+      } else {
+        resolve(null)
+      }
+    })
+  })
+}
+
+/**
+ * 将HEVC格式转换为H.264
+ * @param {string} inputPath - 输入文件路径
+ * @param {string} outputPath - 输出文件路径
+ * @returns {Promise<void>}
+ */
+const convertHevcToH264 = (inputPath, outputPath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(inputPath)
+      .outputOptions('-c:v', 'libx264')
+      .outputOptions('-crf', '20')
+      .output(outputPath)
+      .on('end', () => {
+        console.log('视频转码完成')
+        resolve()
+      })
+      .on('error', (err) => {
+        console.error('视频转码失败:', err)
+        reject(err)
+      })
+      .run()
+  })
+}
+
+/**
+ * 生成缩略图
+ * @param {string} inputPath - 输入文件路径
+ * @param {string} outputPath - 输出文件路径
+ * @returns {Promise<void>}
+ */
+const generateThumbnail = (inputPath, outputPath) => {
+  return new Promise((resolve, reject) => {
+    ffmpeg(inputPath)
+      .output(outputPath)
+      .frames(1)
+      .outputOptions([
+        '-vf',
+        'scale=170:-1', // 宽 170，高等比
+        '-f',
+        'image2' // 强制 image2 格式
+      ])
+      .on('end', () => {
+        console.log('缩略图生成完成')
+        setTimeout(() => {
+          if (fs.existsSync(outputPath)) {
+            console.log('缩略图文件确认存在:', outputPath)
+            resolve()
+          } else {
+            console.error('缩略图生成失败: 文件不存在', outputPath)
+            reject(new Error('缩略图文件不存在'))
+          }
+        }, 100)
+      })
+      .on('error', (err) => {
+        console.error('缩略图生成失败:', err)
+        reject(err)
+      })
+      .run()
+  })
 }
 
 /**
@@ -138,7 +188,7 @@ const uploadFile = (messageId, savePath, coverPath) => {
  */
 const execCommand = (command) => {
   return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
+    exec(command, (error, stdout) => {
       if (error) {
         reject(error)
       } else {
@@ -155,15 +205,8 @@ const getDomainPath = () => {
   return NODE_ENV !== 'development' ? store.getData('prodDomain') : store.getData('devDomain')
 }
 
-const getFFprobePath = () => {
-  return path.join(getResourcesPath(), ffprobePath)
-}
-
-const getFFmpegPath = () => {
-  return path.join(getResourcesPath(), ffmpegPath)
-}
 /**
- * 获取路径
+ * 获取模块路径
  */
 const getResourcesPath = () => {
   let resourcePath = app.getAppPath()
@@ -174,29 +217,35 @@ const getResourcesPath = () => {
 }
 
 /**
- * 获取模块路径
+ * 获取路径
  */
 const getLocalFilePath = (partType, showCover, fileId) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve) => {
     let localFolder = store.getUserData('localFileFolder')
     let localPath = null
     if (partType === 'avatar') {
       localFolder = localFolder + '/avatar/'
-      if (!fs.existsSync(localPath)) {
+      if (!fs.existsSync(localFolder)) {
         fs.mkdirSync(localFolder, { recursive: true })
       }
       localPath = localFolder + fileId + image_suffix
     } else if (partType === 'chat') {
-      let messageInfo = await selectChatMessagesByMessageId(fileId)
-      const month = moment(Number.parseInt(messageInfo.sendTime)).format('YYYYMM')
-      localFolder = localFolder + '/' + month
-      if (!fs.existsSync(localFolder)) {
-        //递归创建目录
-        fs.mkdirSync(localFolder, { recursive: true })
-      }
-      let fileSuffix = messageInfo.fileName
-      fileSuffix = fileSuffix.substring(fileSuffix.lastIndexOf('.'))
-      localPath = localFolder + '/' + fileId + fileSuffix
+      selectChatMessagesByMessageId(fileId).then((messageInfo) => {
+        const month = moment(Number.parseInt(messageInfo.sendTime)).format('YYYYMM')
+        localFolder = localFolder + '/' + month
+        if (!fs.existsSync(localFolder)) {
+          //递归创建目录
+          fs.mkdirSync(localFolder, { recursive: true })
+        }
+        let fileSuffix = messageInfo.fileName
+        fileSuffix = fileSuffix.substring(fileSuffix.lastIndexOf('.'))
+        localPath = localFolder + '/' + fileId + fileSuffix
+        if (showCover) {
+          localPath = localPath + cover_image_suffix
+        }
+        resolve(localPath)
+      })
+      return
     } else if (partType === 'tmp') {
       localFolder = localFolder + '/temp/'
       if (!fs.existsSync(localFolder)) {
@@ -290,11 +339,11 @@ expressServer.get('/file', async (req, res) => {
 })
 
 //TODO 从服务器下载文件
-const downloadFile = async (fileId, showCover, savePath, partType) => {
+const downloadFile = (fileId, showCover, savePath, partType) => {
   showCover = showCover + ''
   let url = getDomainPath() + '/api/chat/downloadFile'
   const token = store.getUserData('token')
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     let formData = new FormData()
     formData.append('fileId', fileId)
     formData.append('showCover', showCover)
@@ -305,33 +354,39 @@ const downloadFile = async (fileId, showCover, savePath, partType) => {
         token: token
       }
     }
-    let response = await axios.post(url, formData, config)
-    const folderPath = savePath.substring(0, savePath.lastIndexOf('/'))
-    if (!fs.existsSync(folderPath)) {
-      fs.mkdirSync(folderPath, { recursive: true })
-    }
-    const stream = fs.createWriteStream(savePath)
-    console.log('我在响应中---------------\n', response.headers)
-    if (response.headers['content-type'] === 'application/json') {
-      let resourcePath = getResourcesPath()
-      console.log('我从本地取了')
-      if (partType === 'avatar') {
-        fs.createReadStream(resourcePath + '/assets/default_avatar.png').pipe(stream)
-      } else {
-        fs.createReadStream(resourcePath + '/assets/404.png').pipe(stream)
-      }
-    } else {
-      response.data.pipe(stream)
-    }
-    stream.on('finish', () => {
-      stream.close()
-      resolve()
-    })
-    stream.on('error', (err) => {
-      console.log('牛处问ti1le')
-      stream.close()
-      reject(err)
-    })
+    axios
+      .post(url, formData, config)
+      .then((response) => {
+        const folderPath = savePath.substring(0, savePath.lastIndexOf('/'))
+        if (!fs.existsSync(folderPath)) {
+          fs.mkdirSync(folderPath, { recursive: true })
+        }
+        const stream = fs.createWriteStream(savePath)
+        console.log('我在响应中---------------\n', response.headers)
+        if (response.headers['content-type'] === 'application/json') {
+          let resourcePath = getResourcesPath()
+          console.log('我从本地取了')
+          if (partType === 'avatar') {
+            fs.createReadStream(resourcePath + '/assets/default_avatar.png').pipe(stream)
+          } else {
+            fs.createReadStream(resourcePath + '/assets/404.png').pipe(stream)
+          }
+        } else {
+          response.data.pipe(stream)
+        }
+        stream.on('finish', () => {
+          stream.close()
+          resolve()
+        })
+        stream.on('error', (err) => {
+          console.log('牛处问ti1le')
+          stream.close()
+          reject(err)
+        })
+      })
+      .catch((err) => {
+        reject(err)
+      })
   })
 }
 
@@ -339,15 +394,34 @@ const downloadFile = async (fileId, showCover, savePath, partType) => {
  * 创建头像的cover
  */
 const createCover = (filePath) => {
-  return new Promise(async (resolve, reject) => {
-    let ffmpegPath = getFFmpegPath()
-    let avatarPath = await getLocalFilePath('avatar', false, store.getUserId() + '_temp')
-    let command = `"${ffmpegPath}" -i "${filePath}" "${avatarPath}" -y`
-    await execCommand(command)
-    let coverPath = await getLocalFilePath('avatar', false, store.getUserId() + '_temp_cover')
-    command = `"${ffmpegPath}" -i "${filePath}" -y -vframes 1 -vf "scale=min(170\\, iw*min(170/iw\\,170/ih)):min(170\\, ih*min(170/iw\\,170/ih))" "${coverPath}"`
-    await execCommand(command)
-    resolve({ avatarStream: fs.readFileSync(avatarPath), coverStream: fs.readFileSync(coverPath) })
+  return new Promise((resolve, reject) => {
+    let avatarId = store.getUserId() + '_temp'
+    let coverId = store.getUserId() + '_temp_cover'
+
+    getLocalFilePath('avatar', false, avatarId).then((avatarPath) => {
+      fs.mkdirSync(path.dirname(avatarPath), { recursive: true })
+
+      ffmpeg(filePath)
+        .output(avatarPath)
+        .on('end', async () => {
+          try {
+            const coverPath = await getLocalFilePath('avatar', false, coverId)
+            await generateThumbnail(filePath, coverPath)
+            resolve({
+              avatarStream: fs.readFileSync(avatarPath),
+              coverStream: fs.readFileSync(coverPath)
+            })
+          } catch (err) {
+            console.error('createCover 缩略图生成失败:', err)
+            reject(err)
+          }
+        })
+        .on('error', (err) => {
+          console.error('createCover 原始头像生成失败:', err)
+          reject(err)
+        })
+        .run()
+    })
   })
 }
 

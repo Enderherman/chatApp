@@ -35,7 +35,7 @@ const add_table = [
     'email varchar not null,' +
     'sys_setting varchar,' +
     'contact_no_read integer,' +
-    'server _port integer,' +
+    'server_port integer,' +
     'primary key (user_id)' +
     ');'
 ]

@@ -1,6 +1,6 @@
 <template>
   <div class="login-panel">
-    <div class="title drag">原梦通讯</div>
+    <div class="title drag">微语</div>
     <div v-if="showLoading" class="loading-panel">
       <img src="@/assets/img/loading.gif" alt="图片加载" />
     </div>
@@ -150,6 +150,7 @@ const changeOpType = () => {
     formData.value = {}
     cleanVerify()
   })
+  changeCheckCode()
 }
 
 /**
@@ -158,7 +159,8 @@ const changeOpType = () => {
 const checkCodeUrl = ref(null)
 const changeCheckCode = async () => {
   let result = await Request({
-    url: Api.checkCode
+    url: Api.checkCode,
+    showLoading: false
   })
   if (!result) {
     return
@@ -208,7 +210,7 @@ const submit = async () => {
     return
   }
 
-  if (!isLogin.value && formData.value.password != formData.value.rePassword) {
+  if (!isLogin.value && formData.value.password !== formData.value.rePassword) {
     errorMsg.value = '两次输入的密码不一致'
     return
   }
@@ -234,13 +236,13 @@ const submit = async () => {
       checkCode: formData.value.checkCode,
       nickName: isLogin.value ? null : formData.value.nickName,
       checkCodeKey: localStorage.getItem('check_code_key')
-      //TODO 增加邮箱验证码功能
     },
     errorCallback: (response) => {
       showLoading.value = false
       //刷新验证码
       changeCheckCode()
-      errorMsg.value = response.info
+      errorMsg.value = response.message
+      Message.error(response.message)
     }
   })
   if (!result) {
@@ -297,7 +299,7 @@ onMounted(() => {
   init()
 })
 
-onUnmounted(()=>{
+onUnmounted(() => {
   window.ipcRenderer.removeAllListeners('loadLocalUserCallback')
 })
 </script>

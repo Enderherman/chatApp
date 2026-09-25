@@ -17,7 +17,7 @@ const api = {
   search: '/contact/search', //搜索好友
   applyAdd: '/contact/applyAdd', //申请加入
   loadApply: '/contact/loadApply', //获取申请列表
-  dealWithApply: 'contact/dealWithApply', //处理申请
+  dealWithApply: '/contact/dealWithApply', //处理申请
   loadContact: '/contact/loadContact', //获取联系人列表
   getContactUserInfo: '/contact/getContactUserInfo', // 获取联系人信息
   addContact2BlackList: '/contact/addContact2BlackList', //拉黑联系人
@@ -31,10 +31,10 @@ const api = {
   uploadFile: '/chat/uploadFile', //上传文件地址
   loadAdminAccount: '/admin/loadUser', //后台获取用户列表
   updateUserStatus: '/admin/updateUserStatus', //后台更新用户状态
-  forceOffLine: '/admin/forceOffLine', //强制下线
+  forceOffLine: '/admin/forcedOffOnline', //强制下线
   loadGroup: '/admin/loadGroup', //群组列表
   adminDissolutionGroup: '/admin/dissolutionGroup', //解散群组
-  saveSysSetting: '/admin/saveSysSetting', //保存系统设置
+  saveSysSetting: '/admin/saveSystemSetting', //保存系统设置
   getSysSetting4Admin: '/admin/getSystemSetting', //获取系统设置
   loadUpdateDatalist: '/app/loadUpdateList', //获取更新列表
   delUpdate: '/app/deleteUpdate ', //删除更新

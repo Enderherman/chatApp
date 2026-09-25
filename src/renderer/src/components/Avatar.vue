@@ -6,6 +6,7 @@
       :width="width"
       :border-radius="borderRadius"
       :show-details="false"
+      :force-get="forceGet"
     >
     </AvatarBase>
     <el-popover
@@ -25,6 +26,7 @@
           :width="width"
           :border-radius="borderRadius"
           :show-details="false"
+          :force-get="true"
         >
         </AvatarBase>
       </template>
@@ -70,6 +72,10 @@ const props = defineProps({
   },
   groupId: {
     type: String
+  },
+  forceGet: {
+    type: Boolean,
+    default: false
   }
 })
 

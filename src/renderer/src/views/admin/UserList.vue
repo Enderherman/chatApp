@@ -9,7 +9,7 @@
                 v-model="searchForm.userId"
                 class="password-input"
                 clearable
-                @keyup.native="loadDataList"
+                @keyup="loadDataList"
               >
               </el-input>
             </el-form-item>
@@ -21,7 +21,7 @@
                 class="password-input"
                 clearable
                 placeholder="支持模糊搜索"
-                @keyup.native="loadDataList"
+                @keyup="loadDataList"
               >
               </el-input>
             </el-form-item>

@@ -2,7 +2,7 @@
   <div :class="['chat-session-item', currentSession ? 'active' : '']">
     <div v-if="data.contactType === 1" class="contact-tag">群</div>
     <Badge :count="data.noReadCount" :top="2" :left="45"></Badge>
-    <AvatarBase :user-id="data.contactId"></AvatarBase>
+    <AvatarBase :user-id="data.contactId" ></AvatarBase>
     <div class="user-info">
       <div class="user-name-panel">
         <div class="user-name">{{ data.contactName }}</div>

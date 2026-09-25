@@ -115,6 +115,8 @@ const saveUserInfo = () => {
     Message.success('保存成功')
     userInfoStore.setInfo(result.data)
     //刷新头像
+    //    avatarInfoStore.setForceReload(userInfoStore.getInfo().userId, true)
+    avatarInfoStore.invalidateAvatar(userInfoStore.getInfo().userId)
     avatarInfoStore.setForceReload(userInfoStore.getInfo().userId, true)
     emit('editBack')
   })

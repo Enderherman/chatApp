@@ -24,6 +24,7 @@
       <div v-show="searchKey" class="session-list">
         <SearchResult
           v-for="item in searchList"
+          :key="item.contactId"
           :data="item"
           @click="searchClickHandler(item)"
         ></SearchResult>
@@ -48,6 +49,7 @@
         <div id="message-panel" class="message-panel">
           <div
             v-for="(data, index) in messageList"
+            :key="'message' + data.messageId"
             :id="'message' + data.messageId"
             class="message-item"
           >
@@ -75,7 +77,12 @@
               <ChatMessageSysMsg :data="data"></ChatMessageSysMsg>
             </template>
             <template
-              v-if="data.messageType === 1 || data.messageType === 2 || data.messageType === 5"
+              v-if="
+                data.messageType === 1 ||
+                data.messageType === 2 ||
+                data.messageType === 5 ||
+                data.messageType === 14
+              "
             >
               <ChatMessage
                 :data="data"
@@ -178,6 +185,16 @@ const messagePageInfo = {
  */
 const chatSessionClickHandler = (item) => {
   distanceToBottom = 0
+  // 在点击时重置forceGet状态，触发头像更新
+  // if (item.contactId) {
+  //   // 假设avatarInfoStore是全局可用的
+  //   avatarInfoStore.setForceReload(item.contactId, true)
+  //
+  //   // 设置一个短暂的延时，稍后将forceGet重置回false
+  //   setTimeout(() => {
+  //     avatarInfoStore.setForceReload(item.contactId, false)
+  //   }, 50)
+  // }
   currentChatSession.value = Object.assign({}, item)
   //清空消息记录数
   messageCountStore.setCount('chatCount', -item.noReadCount, false)
@@ -225,7 +242,6 @@ const loadChatMessage = () => {
  */
 const onReceiveMessage = () => {
   window.ipcRenderer.on('receiveMessage', (event, message) => {
-    console.log('收到消息', message)
     //好友申请信息处理
     if (message.messageType === 4) {
       loadContactApply()
@@ -236,7 +252,7 @@ const onReceiveMessage = () => {
       const localMessage = messageList.value.find((item) => {
         return item.messageId === message.messageId
       })
-      if (localMessage !== null) {
+      if (localMessage) {
         localMessage.status = 1
       }
       return
@@ -262,6 +278,7 @@ const onReceiveMessage = () => {
       chatSession.contactName = message.extentData
       return
     }
+
     let currentSession = chatSessionList.value.find((item) => {
       return item.sessionId === message.sessionId
     })
@@ -274,8 +291,27 @@ const onReceiveMessage = () => {
     if (message.sessionId !== currentChatSession.value.sessionId) {
       messageCountStore.setCount('chatCount', 1, false)
     } else {
+      // console.log('信息', message, '\n')
+      // console.log('列表', messageList.value)
       Object.assign(currentChatSession.value, message.extentData)
-      messageList.value.push(message)
+      // const current = messageList.value.find((item) => {
+      //   return item.sessionId === message.sessionId
+      // })
+      // if (current) {
+      //   Object.assign(current, message)
+      // } else {
+      //   messageList.value.push(message)
+      // }
+      const idx = messageList.value.findIndex((item) => item.messageId === message.messageId)
+      if (idx > -1) {
+        // 用新的 message 对象替换原来的位置
+        message.messageType = 14
+        messageList.value.splice(idx, 1, message)
+      } else {
+        messageList.value.push(message)
+      }
+
+      // 确保滚动跟上
       scrollToBottom()
     }
   })
@@ -377,7 +413,6 @@ const loadContactApply = () => {
 
 const onLoadContactApply = () => {
   window.ipcRenderer.on('loadContactApplyCallback', (e, contactNoRead) => {
-    //console.log('未读好友申请数量:', contactNoRead)
     messageCountStore.setCount('contactApplyCount', contactNoRead, true)
   })
 }
@@ -559,7 +594,7 @@ const searchClickHandler = (item) => {
  */
 watch(
   () => route.query.timestamp,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal && route.query.chatId) {
       sendMessage(route.query.chatId)
     }

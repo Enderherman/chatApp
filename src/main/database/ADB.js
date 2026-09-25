@@ -35,6 +35,16 @@ const createTable = async () => {
       await db.run(table)
     }
 
+    // 旧版 user_setting 表把 server_port 建成了 server 列，迁移已有用户数据库。
+    const userSettingColumns = await queryAll('pragma table_info(user_setting)', [])
+    const hasServerPort = userSettingColumns.some((column) => column.name === 'server_port')
+    const hasLegacyServer = userSettingColumns.some((column) => column.name === 'server')
+    if (!hasServerPort && hasLegacyServer) {
+      await run('alter table user_setting rename column server to server_port', [])
+    } else if (!hasServerPort) {
+      await run('alter table user_setting add column server_port integer', [])
+    }
+
     // 创建索引
     for (const index of add_index) {
       await db.run(index)

@@ -138,7 +138,7 @@ const onAddChatMessage = () => {
     await saveMessage(data)
     //保存文件
     if (data.messageType === 5) {
-      console.log('我去存本地了啊:', data.messageId, data.filePath, data.fileType)
+      console.log('存本地信息:', data.messageId, data.filePath, data.fileType)
       await saveFileToLocal(data.messageId, data.filePath, data.fileType)
 
       const updateInfo = { status: 1 }
@@ -179,7 +179,7 @@ const openWindow = ({ windowId, title = 'WeTalk', path, width = 960, height = 72
   let newWindow = getWindow(windowId)
   if (!newWindow) {
     newWindow = new BrowserWindow({
-      title: '原梦通讯',
+      title: '微语',
       width: width,
       height: height,
       fullscreenable: false,

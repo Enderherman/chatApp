@@ -1,6 +1,7 @@
 import { run, queryOne, insertOrIgnore, update, queryAll } from './ADB'
 import store from '../store'
 import { startLocalServer } from '../fileOperation'
+import path from 'path'
 
 const os = require('os')
 
@@ -40,17 +41,18 @@ const addUserSetting = async (userId, email) => {
     serverPort += 1
   }
   const systemSettingInfo = {
-    localFileFolder: userDir + '\\.weTalk\\fileStorage'
+    localFileFolder: path.join(userDir, '.weTalk', 'fileStorage') + path.sep
   }
   let sql = 'select * from user_setting where user_id = ?'
   const userInfo = await queryOne(sql, [userId])
   let resultServerPort
-  let localFileFolder = systemSettingInfo.localFileFolder + userId
+  let localFileFolder
   if (userInfo) {
     //增加更新功能
     //    await update('user_setting', { email: email }, { userId: userId })
     resultServerPort = userInfo.serverPort
-    localFileFolder = JSON.parse(userInfo.sysSetting).localFileFolder + '\\' + userId
+    const savedSettings = userInfo.sysSetting ? JSON.parse(userInfo.sysSetting) : systemSettingInfo
+    localFileFolder = path.join(savedSettings.localFileFolder || systemSettingInfo.localFileFolder, userId)
   } else {
     await insertOrIgnore('user_setting', {
       userId: userId,
@@ -60,6 +62,7 @@ const addUserSetting = async (userId, email) => {
       serverPort: serverPort
     })
     resultServerPort = serverPort
+    localFileFolder = path.join(systemSettingInfo.localFileFolder, userId)
   }
   //启动本地服务
   startLocalServer(resultServerPort)

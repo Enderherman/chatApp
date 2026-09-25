@@ -13,8 +13,8 @@
           <div v-if="downloadPercent.progress !== 100">
             <el-progress :percentage="downloadPercent.progress" />
             <div class="download-tips">
-              正在下载，请稍后({{ Utils.size2Str(downloadPercent.loaded) }} /
-              {{ Utils.size2str(downloadPercent.total) }})
+              正在下载，请稍后({{ Utils.sizeToStr(downloadPercent.loaded) }} /
+              {{ Utils.sizeToStr(downloadPercent.total) }})
             </div>
           </div>
           <div v-else>下载完成，准备安装</div>

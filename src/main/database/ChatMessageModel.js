@@ -16,7 +16,7 @@ import { updateNoReadCount } from './ChatSessionUserModel'
  */
 const saveMessage = (chatMessage) => {
   chatMessage.userId = store.getUserId()
-  console.log('this is chatMessageModel, chatMessage: ', chatMessage, '\n')
+  //console.log('this is chatMessageModel, chatMessage: ', chatMessage, '\n')
   return insertOrUpdate('chat_message', chatMessage)
 }
 

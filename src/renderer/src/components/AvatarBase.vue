@@ -8,7 +8,7 @@
       :width="width"
       :file-id="userId"
       part-type="avatar"
-      :force-get="avatarInfoStore.getForceReload(userId)"
+      :force-get="avatarInfoStore.getForceReload(userId) || forceGet"
     >
     </ShowLocalImage>
   </div>
@@ -38,12 +38,26 @@ const props = defineProps({
   partType: {
     type: String,
     default: 'avatar'
+  },
+  forceGet: {
+    type: Boolean,
+    default: false
   }
 })
 
 const showDetailHandler = () => {
   if (!props.showDetail) {
     return
+  }
+  // 在点击时重置forceGet状态，触发头像更新
+  if (props.userId) {
+    // 假设avatarInfoStore是全局可用的
+    avatarInfoStore.setForceReload(props.userId, true)
+
+    // 设置一个短暂的延时，稍后将forceGet重置回false
+    setTimeout(() => {
+      avatarInfoStore.setForceReload(props.userId, false)
+    }, 50)
   }
   window.ipcRenderer.send('newWindow', {
     windowId: 'media',

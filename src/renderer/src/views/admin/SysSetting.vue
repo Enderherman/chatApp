@@ -36,7 +36,7 @@
           <template #append>MB</template>
         </el-input>
       </el-form-item>
-      <el-form-item label="其他文件大小" prop="maxFilesize">
+      <el-form-item label="其他文件大小" prop="maxFileSize">
         <el-input
           v-model.trim="formData.maxFileSize"
           clearable

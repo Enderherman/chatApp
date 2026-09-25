@@ -20,7 +20,7 @@
     "extraResources": [
       "./assets/**"
     ],
-    "productName": "EasyChat",
+    "productName": "Wetalk",
     "appId": "com.easychat",
     "directories": {
       "output": "installPackages"
@@ -29,9 +29,6 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./resources/icon.ico",
-      "uninstallerIcon": "./resources/icon.ico",
-      "installerHeaderIcon": "./resources/icon.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "EasyChat"
@@ -41,7 +38,6 @@
     },
     "win": {
       "artifactName": "${productName}Setup.${version}.exe",
-      "icon": "resources/icon.ico",
       "target": [
         "nsis"
       ]
@@ -56,7 +52,9 @@
     "electron-store": "^8.1.0",
     "element-plus": "^2.4.3",
     "express": "^4.18.2",
-    "fluent-ffmpeg": "^2.1.2",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0",
+    "fluent-ffmpeg": "^2.1.3",
     "form-data": "^4.0.2",
     "fs-extra": "^11.2.0",
     "js-md5": "^0.8.3",

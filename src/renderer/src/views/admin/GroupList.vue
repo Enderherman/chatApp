@@ -164,7 +164,8 @@ const dissolutionGroup = (data) => {
       let result = await Request({
         url: Api.adminDissolutionGroup,
         params: {
-          groupId: data.groupId
+          groupId: data.groupId,
+          groupOwnerId: data.groupOwnId
         }
       })
       if (!result) {

@@ -2,7 +2,12 @@
   <div class="main">
     <div class="left-sider">
       <div>
-        <Avatar :user-id="userInfoStore.getInfo().userId" :width="36"></Avatar>
+        <Avatar
+          :key="avatarInfoStore.getAvatarVersion(userInfoStore.getInfo().userId)"
+          :user-id="userInfoStore.getInfo().userId"
+          :width="36"
+          :force-get="avatarInfoStore.getForceReload(userInfoStore.getInfo().userId)"
+        ></Avatar>
       </div>
       <div class="menu-list">
         <template v-for="item in menuList">
@@ -56,12 +61,14 @@ import { useUserInfoStore } from '@/stores/UserInfoStore'
 import { useGlobalInfoStore } from '@/stores/GlobalInfoStore'
 import { useSysSettingStore } from '@/stores/SystemSettingStore'
 import { useMessageCountStore } from '@/stores/MessageCountStore'
+import { useAvatarInfoStore } from '@/stores/AvatarUploadStore'
 import Update from '@/views/Update.vue'
 
 const messageCountStore = useMessageCountStore()
 const userInfoStore = useUserInfoStore()
 const globalInfoStore = useGlobalInfoStore()
 const sysSettingStore = useSysSettingStore()
+const avatarInfoStore = useAvatarInfoStore()
 const router = useRouter()
 const route = useRoute()
 const menuList = ref([
