@@ -1,7 +1,7 @@
 {
-  "name": "easychat-front",
+  "name": "wetalk-app",
   "version": "1.0.0",
-  "description": "EasyChat",
+  "description": "WeTalkApp Electron desktop client",
   "main": "./out/main/index.js",
   "author": "example.com",
   "homepage": "https://www.electronjs.org",
@@ -20,7 +20,7 @@
     "extraResources": [
       "./assets/**"
     ],
-    "productName": "Wetalk",
+    "productName": "WeTalkApp",
     "appId": "com.easychat",
     "directories": {
       "output": "installPackages"
@@ -31,7 +31,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "EasyChat"
+      "shortcutName": "WeTalkApp"
     },
     "mac": {
       "icon": "icons/icon.icns"

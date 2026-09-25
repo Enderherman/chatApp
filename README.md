@@ -1,34 +1,38 @@
-# easychat-front
+# WeTalkApp
 
-An Electron application with Vue
+WeTalkApp 是 WeTalk 的 Electron 桌面客户端，使用 Vue 3、Vite、Pinia 和 Element Plus 构建。它通过 HTTP API 和 WebSocket 连接 wetalk 后端，并使用 Electron main/preload 提供本地文件、SQLite 缓存和桌面窗口能力。
 
-## Recommended IDE Setup
+## 环境要求
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- Node.js 与 npm
+- Windows、macOS 或 Linux 桌面环境
+- 可访问的 wetalk 后端及其 MySQL、Redis 服务
 
-## Project Setup
-
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
+## 安装依赖
 
 ```bash
-$ npm run dev
+npm install
 ```
 
-### Build
+## 本地开发
 
 ```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
+npm run dev
 ```
+
+开发环境 API 与 WebSocket 地址在应用配置中设置。浏览器版 WeTalkWeb 是独立客户端，不通过 Electron 启动。
+
+## 构建桌面安装包
+
+```bash
+# Windows
+npm run build:win
+
+# macOS
+npm run build:mac
+
+# Linux
+npm run build:linux
+```
+
+当前 npm 包名为 wetalk-app，桌面产品显示名为 WeTalkApp。本次未调整 Electron appId。package.json 与 electron-builder.yml 目前配置的 appId 不同；下次发布安装包前应确认实际生效值，并评估已安装版本的升级兼容性。
