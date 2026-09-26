@@ -514,10 +514,12 @@ const changeLocalFolder = async () => {
 const downloadUpdate = async (id, fileName) => {
   let url = `${store.getData('prodDomain')}/api/app/downloadUpdate`
   const token = store.getUserData('token')
+  const params = new URLSearchParams()
+  params.set('id', String(id))
   const config = {
     responseType: 'stream',
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       token: token
     },
     onDownloadProgress(progress) {
@@ -525,7 +527,7 @@ const downloadUpdate = async (id, fileName) => {
       getWindow('main').webContents.send('downloadUpdateCallback', loaded)
     }
   }
-  const response = await axios.post(url, { id }, config)
+  const response = await axios.post(url, params, config)
   const localFile = await getLocalFilePath(null, false, fileName)
   const stream = fs.createWriteStream(localFile)
   response.data.pipe(stream)

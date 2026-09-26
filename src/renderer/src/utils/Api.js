@@ -37,7 +37,7 @@ const api = {
   saveSysSetting: '/admin/saveSystemSetting', //保存系统设置
   getSysSetting4Admin: '/admin/getSystemSetting', //获取系统设置
   loadUpdateDatalist: '/app/loadUpdateList', //获取更新列表
-  delUpdate: '/app/deleteUpdate ', //删除更新
+  delUpdate: '/app/deleteUpdate', //删除更新
   saveUpdate: '/app/saveUpdate', //保存更新
   postUpdate: '/app/postUpdate', //发布更新
   loadBeautyAccount: '/userInfoBeauty/loadBeautyAccountList', //靓号列表
